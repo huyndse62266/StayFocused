@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <property name="now" value="now()" dbms="h2"/>
+
+    <property name="now" value="now()" dbms="mysql"/>
+    <property name="autoIncrement" value="true"/>
+
+    <property name="floatType" value="float4" dbms="postgresql, h2"/>
+    <property name="floatType" value="float" dbms="mysql, oracle, mssql"/>
+
+    <!--
+        Added the entity Post.
+    -->
+    <changeSet id="20181007133208-1" author="jhipster">
+        <createTable tableName="post">
+
+            <column name="post_id" type="bigint" autoIncrement="${autoIncrement}">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="post_name" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="post_title" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="post_description" type="text">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="post_start_date" type="date">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="post_end_date" type="date">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="post_total_number_voucher" type="bigint">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="post_remain_number_voucher" type="bigint">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="post_discount_rate" type="bigint">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="post_point_required" type="bigint">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="post_banner" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="store_group_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
+
+            <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here, do not remove-->
+        </createTable>
+        <dropDefaultValue tableName="post" columnName="post_start_date" columnDataType="datetime"/>
+        <dropDefaultValue tableName="post" columnName="post_end_date" columnDataType="datetime"/>
+        
+    </changeSet>
+    <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here, do not remove-->
+</databaseChangeLog>

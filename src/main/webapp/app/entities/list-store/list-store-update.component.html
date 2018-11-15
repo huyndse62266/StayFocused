@@ -1,0 +1,46 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+            <h2 id="-list-storeGroup-heading">Create or edit a List Store</h2>
+            <div>
+                <-alert-error></-alert-error>
+                <div class="form-group" [hidden]="!listStore.id">
+                    <label for="id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id"
+                        [(ngModel)]="listStore.id" readonly />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_storeID">Store ID</label>
+                    <input type="text" class="form-control" name="storeID" id="field_storeID"
+                        [(ngModel)]="listStore.storeID" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_storeName">Store Name</label>
+                    <input type="text" class="form-control" name="storeName" id="field_storeName"
+                        [(ngModel)]="listStore.storeName" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_storeAddress">Store Address</label>
+                    <input type="text" class="form-control" name="storeAddress" id="field_storeAddress"
+                        [(ngModel)]="listStore.storeAddress" />
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_store">Store</label>
+                    <select class="form-control" id="field_store" name="storeGroup" [(ngModel)]="listStore.storeId" >
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="storeOption.id" *ngFor="let storeOption of stores; trackBy: trackStoreById">{{storeOption.id}}</option>
+                    </select>
+                </div>
+            </div>
+            <div>
+                <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
+                    <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span>Cancel</span>
+                </button>
+                <button type="submit" id="save-entity" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span>Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

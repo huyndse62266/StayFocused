@@ -1,0 +1,43 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="activitiesLog">
+            <h2><span>Activities Log</span> {{activitiesLog.id}}</h2>
+            <hr>
+            <-alert-error></-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span>Activities Log ID</span></dt>
+                <dd>
+                    <span>{{activitiesLog.activitiesLogID}}</span>
+                </dd>
+                <dt><span>Activities Log Date</span></dt>
+                <dd>
+                    <span>{{activitiesLog.activitiesLogDate}}</span>
+                </dd>
+                <dt><span>Activities Log Point Received</span></dt>
+                <dd>
+                    <span>{{activitiesLog.activitiesLogPointReceived}}</span>
+                </dd>
+                <dt><span>Activities Log</span></dt>
+                <dd>
+                    <span>{{activitiesLog.activitiesLog}}</span>
+                </dd>
+                <dt><span>User</span></dt>
+                <dd>
+                    {{activitiesLog.userId}}
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/activities-log', activitiesLog.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span> Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

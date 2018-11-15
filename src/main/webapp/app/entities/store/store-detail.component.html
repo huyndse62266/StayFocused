@@ -1,0 +1,47 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="storeGroup">
+            <h2><span>Store</span> {{storeGroup.id}}</h2>
+            <hr>
+            <-alert-error></-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span>Store ID</span></dt>
+                <dd>
+                    <span>{{storeGroup.storeID}}</span>
+                </dd>
+                <dt><span>Store Name</span></dt>
+                <dd>
+                    <span>{{storeGroup.storeName}}</span>
+                </dd>
+                <dt><span>Store Phone</span></dt>
+                <dd>
+                    <span>{{storeGroup.storePhone}}</span>
+                </dd>
+                <dt><span>Store Mail</span></dt>
+                <dd>
+                    <span>{{storeGroup.storeMail}}</span>
+                </dd>
+                <dt><span>Store Web</span></dt>
+                <dd>
+                    <span>{{storeGroup.storeWeb}}</span>
+                </dd>
+                <dt><span>Store Description</span></dt>
+                <dd>
+                    <span>{{storeGroup.storeDescription}}</span>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/storeGroup', storeGroup.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span> Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

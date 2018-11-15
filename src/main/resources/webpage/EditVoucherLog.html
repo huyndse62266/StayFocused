@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<!--
+* CoreUI - Free Bootstrap Admin Template
+* @version v2.1.6
+* @link https://coreui.io
+* Copyright (c) 2018 creativeLabs Łukasz Holeczek
+* Licensed under MIT (https://coreui.io/license)
+-->
+
+<html lang="en">
+<head>
+    <base href="./">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <meta name="description" content="CoreUI - Open Source Bootstrap Admin Template">
+    <meta name="author" content="Łukasz Holeczek">
+    <meta name="keyword" content="Bootstrap,Admin,Template,Open,Source,jQuery,CSS,HTML,RWD,Dashboard">
+    <title>Voucher Log Detail</title>
+    <!-- Icons-->
+    <link href="node_modules/@coreui/icons/css/coreui-icons.min.css" rel="stylesheet">
+    <link href="node_modules/flag-icon-css/css/flag-icon.min.css" rel="stylesheet">
+    <link href="node_modules/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link href="node_modules/simple-line-icons/css/simple-line-icons.css" rel="stylesheet">
+    <!-- Main styles for this application-->
+    <link href="css/style.css" rel="stylesheet">
+    <link href="vendors/pace-progress/css/pace.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!-- Global site tag (gtag.js) - Google Analytics-->
+    <script async="" src="https://www.googletagmanager.com/gtag/js?id=UA-118965717-3"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+        // Shared ID
+        gtag('config', 'UA-118965717-3');
+        // Bootstrap ID
+        gtag('config', 'UA-118965717-5');
+
+        window.onload = function () {
+            if(localStorage.getItem("access_token") === null){
+                window.location.href = "LoginPage.html";
+            }
+            getVoucherLog();
+        }
+
+        function logout() {
+            localStorage.removeItem("access_token");
+            window.location.href = "LoginPage.html";
+        }
+
+        function getVoucherLog () {
+            var token = localStorage.getItem("access_token");
+            var voucherLogID = localStorage.getItem('voucherLogID');
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET","http://localhost:8080/api/voucher-logs/"+voucherLogID);
+            xhr.setRequestHeader("Content-Type", "application/json; charset=UTF-8");
+            xhr.setRequestHeader("Authorization","Bearer "+token);
+            xhr.send();
+            xhr.onreadystatechange = function () {
+                if(this.readyState == 4 && this.status == 200) {
+                    var data = JSON.parse(xhr.responseText).data;
+                    console.log(data);
+                    document.getElementById('IDtxt').value = data.voucherLogID;
+                    document.getElementById('voucherIDtxt').value = data.voucher.voucherID;
+                    document.getElementById('voucherNumbertxt').value = data.voucher.voucherNumber;
+                    // document.getElementById('voucherNumbetxt').value = data.voucherStatus.voucherStatus;
+                    // document.getElementById('voucherNumbetxt').value = data.voucherStatus.voucherPointRequired;\
+                    if(data.voucherLogUserUsed === true)
+                        document.getElementById('statuslbl').innerText = "Activated";
+                    if(data.voucherLogUserUsed !== true)
+                        document.getElementById('statuslbl').innerText = "Not Activated";
+                    document.getElementById('datetxt').value = data.voucherLogDateUsed;
+                    document.getElementById('usernametxt').value = data.user.username;
+                    document.getElementById('fullnametxt').value = data.user.firstName + ' '+ data.user.lastName;
+                    document.getElementById('emailtxt').value = data.user.email;
+                    document.getElementById('phonetxt').value = data.user.phone;
+
+                }
+            }
+
+        }
+
+
+        function edit() {
+            var token = localStorage.getItem("access_token");
+            var xhr = new XMLHttpRequest();
+            xhr.open("PUT","http://localhost:8080/api/voucher-logs/");
+            xhr.setRequestHeader("Content-Type", "application/json; charset=UTF-8");
+            xhr.setRequestHeader("Authorization","Bearer "+token);
+            var status =  '';
+            if(document.getElementById('statuslbl').value === 'Activated'){
+                status = true;
+            }
+            if(document.getElementById('statuslbl').value !== 'Activated'){
+                status = false;
+            }
+            var voucherLog = {
+                "voucherLogID": document.getElementById('IDtxt').value,
+                "voucherLogStatus": status,
+                "voucherLogDateUsed": document.getElementById('datetxt').value,
+                "user":{
+                    "username":document.getElementById('usernametxt').value
+                },
+                "voucher":{
+                    "voucherID":document.getElementById('voucherIDtxt').value
+                }
+            }
+            xhr.send(JSON.stringify(voucherLog));
+            xhr.onreadystatechange = function () {
+                console.log('hahahaha');
+                if(xhr.readyState == 4 && xhr.status == 200){
+                    console.log(xhr.responseText);
+                    var respone = JSON.parse(xhr.responseText);
+                    if(respone.status === 200){
+                        getVoucherLog();
+                        document.getElementById('resultlbl').innerText = respone.message;
+                    }else{
+                        document.getElementById('resultlbl').innerText = respone.data;
+                    }
+                }
+
+            }
+        }
+
+        function  changeStatus(){
+            var status =  document.getElementById('statuslbl').value;
+            if(status === "Activated")
+                document.getElementById('statuslbl').innerText = "Not Activated";
+                document.getElementById('statuslbl').value = "Not Activated";
+            if(status !== "Activated"){
+                document.getElementById('statuslbl').innerText  = "Activated";
+                document.getElementById('statuslbl').value  = "Activated";
+            }
+        }
+
+    </script>
+</head>
+<body class="app header-fixed sidebar-fixed aside-menu-fixed sidebar-lg-show">
+<header class="app-header navbar">
+
+</header>
+<div class="app-body">
+    <div class="sidebar">
+        <nav class="sidebar-nav">
+            <ul class="nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="Dashboard.html">
+                        <i class="nav-icon icon-speedometer"></i> Dashboard
+                    </a>
+                </li>
+                <li class="nav-title"></li>
+                <li class="nav-item">
+                    <a class="nav-link" href="ListStoreGroup.html">
+                        <i class="nav-icon icon-drop"></i> Store Group</a>
+                </li>
+
+                <li class="nav-title"></li>
+                <li class="nav-item">
+                    <a class="nav-link" href="ListStore.html">
+                        <i class="nav-icon icon-drop"></i> Stores</a>
+                </li>
+                <li class="nav-title"></li>
+                <li class="nav-item">
+                    <a class="nav-link" href="ListPost.html">
+                        <i class="nav-icon icon-drop"></i> Post</a>
+                </li>
+                <li class="nav-title"></li>
+                <li class="nav-item">
+                    <a class="nav-link" href="ListVoucher.html">
+                        <i class="nav-icon icon-drop"></i> Voucher</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+    <main class="main">
+        <!-- Breadcrumb-->
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">Home</li>
+            <li class="breadcrumb-item">
+                <a href="#">Admin</a>
+            </li>
+            <li class="breadcrumb-item active">Dashboard</li>
+            <!-- Breadcrumb Menu-->
+            <li class="breadcrumb-menu d-md-down-none">
+                <div class="btn-group" role="group" aria-label="Button group">
+                    <a class="btn" href="#">
+                        <i class="icon-speech"></i>
+                    </a>
+                    <a class="btn" href="./">
+                        <i class="icon-graph"></i>  Dashboard</a>
+                    <a class="btn" href="#">
+                        <i class="icon-settings"></i>  Settings</a>
+                </div>
+            </li>
+        </ol>
+        <div class="container-fluid">
+            <div class="animated fadeIn">
+
+                <div class="row" style="width: 130%;padding-left: 23%;">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <strong>Voucher Log Detail</strong>
+                            </div>
+                            <div class="card-body">
+                                <form class="form-horizontal" action="" method="post" enctype="multipart/form-data">
+                                    <div class="form-group row">
+                                        <label class="col-md-3 col-form-label"></label>
+                                        <div class="col-md-9">
+                                            <label id="resultlbl"></label>
+                                        </div>
+                                    </div>
+                                    <div class="border-info" >
+                                        <div class="card-header" style="margin:-5px; margin-bottom: 10px">
+                                            <strong>Voucher info</strong>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-md-3 col-form-label">Voucher ID</label>
+                                            <div class="col-md-9">
+                                                <!--<p class="form-control-static" id="storegroupIDtxt"></p>-->
+                                                <input class="form-control" id="IDtxt" type="text" name="disabled-input" disabled="">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-md-3 col-form-label">Code</label>
+                                            <div class="col-md-9">
+                                                <input type="hidden" id="voucherIDtxt">
+                                                <input class="form-control" id="voucherNumbertxt" type="text" name="disabled-input" disabled="">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row" style=" height: 50px" >
+                                            <label class="col-md-3 col-form-label" for="statuslbl" style="padding-top: 15px">Usage Status</label>
+                                            <div class="col-6 col-sm-4 col-md-2 col-xl mb-3 mb-xl-0">
+                                                <label class="btn btn-square btn-block btn-primary" id="statuslbl" style="width: 120px;height: 50px;padding-top: 14px;" onclick="changeStatus()" ></label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-md-3 col-form-label" for="datetxt">Date Used</label>
+                                            <div class="col-md-9">
+                                                <input class="form-control" id="datetxt" type="text" name="text-input">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="border-info">
+                                        <div class="card-header" style="margin:-5px; margin-bottom: 10px">
+                                            <strong>User info</strong>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-md-3 col-form-label" for="usernametxt">Username</label>
+                                            <div class="col-md-9">
+                                                <input class="form-control" id="usernametxt" type="text" name="text-input">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-md-3 col-form-label" for="fullnametxt">Fullname</label>
+                                            <div class="col-md-9">
+                                                <input class="form-control" id="fullnametxt" type="text" name="text-input" name="disabled-input" disabled="">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-md-3 col-form-label" for="phonetxt">Phone</label>
+                                            <div class="col-md-9">
+                                                <input class="form-control" id="phonetxt" type="text" name="text-input" name="disabled-input" disabled="">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-md-3 col-form-label" for="emailtxt">Email</label>
+                                            <div class="col-md-9">
+                                                <input class="form-control" id="emailtxt" type="text" name="text-input" name="disabled-input" disabled="">
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+
+                                </form>
+                            </div>
+                            <div class="card-footer">
+                                <button class="btn btn-sm btn-primary" type="submit" onclick="edit()">
+                                    <i class="fa fa-dot-circle-o"></i> Submit</button>
+                                <button class="btn btn-sm btn-danger" type="reset">
+                                    <i class="fa fa-ban"></i> Reset</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- /.col-->
+                </div>
+
+
+
+
+
+            </div>
+        </div>
+    </main>
+    <aside class="aside-menu">
+        <ul class="nav nav-tabs" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" data-toggle="tab" href="#timeline" role="tab">
+                    <i class="icon-list"></i>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#messages" role="tab">
+                    <i class="icon-speech"></i>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#settings" role="tab">
+                    <i class="icon-settings"></i>
+                </a>
+            </li>
+        </ul>
+
+    </aside>
+</div>
+<footer class="app-footer">
+    <div>
+
+    </div>
+    <div class="ml-auto">
+        <span>Powered by</span>
+        <a>AntiPhone</a>
+    </div>
+</footer>
+<!-- CoreUI and necessary plugins-->
+<script src="node_modules/jquery/dist/jquery.min.js"></script>
+<script src="node_modules/popper.js/dist/umd/popper.min.js"></script>
+<script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="node_modules/pace-progress/pace.min.js"></script>
+<script src="node_modules/perfect-scrollbar/dist/perfect-scrollbar.min.js"></script>
+<script src="node_modules/@coreui/coreui/dist/js/coreui.min.js"></script>
+<!-- Plugins and scripts required by this view-->
+<script src="node_modules/chart.js/dist/Chart.min.js"></script>
+<script src="node_modules/@coreui/coreui-plugin-chartjs-custom-tooltips/dist/js/custom-tooltips.min.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

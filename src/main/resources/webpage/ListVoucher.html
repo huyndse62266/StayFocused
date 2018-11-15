@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<!--
+* CoreUI - Free Bootstrap Admin Template
+* @version v2.1.6
+* @link https://coreui.io
+* Copyright (c) 2018 creativeLabs Łukasz Holeczek
+* Licensed under MIT (https://coreui.io/license)
+-->
+
+<html lang="en">
+<head>
+    <base href="./">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <meta name="description" content="CoreUI - Open Source Bootstrap Admin Template">
+    <meta name="author" content="Łukasz Holeczek">
+    <meta name="keyword" content="Bootstrap,Admin,Template,Open,Source,jQuery,CSS,HTML,RWD,Dashboard">
+    <title>List Voucher Page</title>
+    <!-- Icons-->
+    <link href="node_modules/@coreui/icons/css/coreui-icons.min.css" rel="stylesheet">
+    <link href="node_modules/flag-icon-css/css/flag-icon.min.css" rel="stylesheet">
+    <link href="node_modules/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link href="node_modules/simple-line-icons/css/simple-line-icons.css" rel="stylesheet">
+    <!-- Main styles for this application-->
+    <link href="css/style.css" rel="stylesheet">
+    <link href="vendors/pace-progress/css/pace.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!-- Global site tag (gtag.js) - Google Analytics-->
+    <script async="" src="https://www.googletagmanager.com/gtag/js?id=UA-118965717-3"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+
+        gtag('js', new Date());
+        // Shared ID
+        gtag('config', 'UA-118965717-3');
+        // Bootstrap ID
+        gtag('config', 'UA-118965717-5');
+
+        window.onload = function () {
+            if(localStorage.getItem("access_token") === null){
+                window.location.href = "LoginPage.html";
+            }
+            getListVoucher();
+
+        }
+
+        function logout() {
+            localStorage.removeItem("access_token");
+            window.location.href = "LoginPage.html";
+        }
+
+        function getListVoucher() {
+            var xhr = new XMLHttpRequest();
+            var token = localStorage.getItem("access_token");
+            var storeGroupID = localStorage.getItem("storeGroup");
+            console.log("===>" +storeGroupID);
+            if(storeGroupID !== null){
+                xhr.open("GET", "http://localhost:8080/api/vouchers/store-groups/"+storeGroupID);
+            }else{
+                xhr.open("GET", "http://localhost:8080/api/vouchers/");
+            }
+
+            xhr.setRequestHeader("Content-Type", "application/json; charset=UTF-8");
+            xhr.setRequestHeader("Authorization", "Bearer "+token);
+            xhr.send();
+            xhr.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    console.log("haha")
+                    var data = JSON.parse(xhr.responseText).data;
+                    console.log(data);
+                    var tbody = document.getElementById('my-data');
+                    var table = '<tr>';
+                    for (var i = 0; i < data.length; i++) {
+                        var status = "Unused";
+                        if(data[i].voucherStatus === true){
+                            status = "Used";
+                        }
+                        table += '<td class="text-center">' + (i + 1) + '</td>';
+                        table += '<td>' + data[i].voucherNumber + '</td>';
+                        table += '<td>' + status + '</td>';
+                        table += '<td>' + data[i].post.postName + '</td>';
+                        table += '<td>' + data[i].post.storeGroup.storeGroupName + '</td>';
+                        table += '<td class="text-center"><button disabled class="btn" onclick="viewDetail(this.id)" id="' + data[i].voucherID + '"><i class="fa fa-navicon" style="font-size:24px" "/></button></td>'
+                        table += '<td class="text-center"><button disabled class="btn" onclick="editStore(this.id)" id="' + data[i].voucherID + '"><i class="glyphicon glyphicon-pencil" style="font-size:21px"></button></td>'
+                        table += '<td class="text-center"><button class="btn" onclick="deleteID(this.id)" id="' + data[i].voucherID + '"><i class="fa fa-close" style="font-size:24px" /></button></td>'
+                        table += '</tr>';
+
+                    }
+                    table += '</tr>';
+                    tbody.innerHTML = table;
+                }
+            }
+        }
+
+        function deleteID(sendID) {
+            var xhr = new XMLHttpRequest();
+            var token = localStorage.getItem("access_token");
+            xhr.open("DELETE", "http://localhost:8080/api/store-groups/" + sendID);
+            xhr.setRequestHeader("Content-Type", "application/json; charset=UTF-8");
+            xhr.setRequestHeader("Authorization", "Bearer " + token);
+            xhr.send();
+            xhr.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    getStoreGroup();
+                }
+            }
+        }
+
+        function viewDetail(sendID) {
+            localStorage.setItem("voucherID", sendID);
+            window.location.href = "VoucherLogDetail.html";
+        }
+
+        function editStore(sendID) {
+            localStorage.setItem("storeGroupID", sendID);
+            window.location.href = "base/EditStoreGroup.html";
+        }
+    </script>
+</head>
+<body class="app header-fixed sidebar-fixed aside-menu-fixed sidebar-lg-show">
+<header class="app-header navbar">
+    <div style="width: 35%; margin-right: -122%">
+        <div class="col-6 col-sm-4 col-md-2 col-xl mb-3 mb-xl-0">
+            <button class="btn btn-block btn-danger active" type="button" aria-pressed="true" onclick="logout()">Log out</button>
+        </div>
+    </div>
+</header>
+<div class="app-body">
+    <div class="sidebar">
+        <nav class="sidebar-nav">
+            <ul class="nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="ListStoreGroup.html">
+                        <i class="nav-icon icon-speedometer"></i> Dashboard
+                    </a>
+                </li>
+                <li class="nav-title"></li>
+                <li class="nav-item">
+                    <a class="nav-link" href="ListStoreGroup.html">
+                        <i class="nav-icon icon-drop"></i> Store Group</a>
+                </li>
+
+                <li class="nav-title"></li>
+                <li class="nav-item">
+                    <a class="nav-link" href="ListStore.html">
+                        <i class="nav-icon icon-drop"></i> Stores</a>
+                </li>
+                <li class="nav-title"></li>
+                <li class="nav-item">
+                    <a class="nav-link" href="ListPost.html">
+                        <i class="nav-icon icon-drop"></i> Post</a>
+                </li>
+                <li class="nav-title"></li>
+                <li class="nav-item">
+                    <a class="nav-link" href="ListVoucher.html">
+                        <i class="nav-icon icon-drop"></i> Voucher</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+    <main class="main">
+        <!-- Breadcrumb-->
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">Home</li>
+            <li class="breadcrumb-item">
+                <a href="ListStoreGroup.html">Store Group</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a href="ListStoreGroup.html">Post </a>
+            </li>
+            <li class="breadcrumb-item active">Voucher</li>
+            <!-- Breadcrumb Menu-->
+
+        </ol>
+        <div class="container-fluid">
+            <div class="animated fadeIn">
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+
+                            <div class="card-body">
+
+                                <!-- /.row-->
+                                <br>
+                                <table class="table table-responsive-sm table-hover table-outline mb-0">
+                                    <thead class="thead-light">
+                                    <tr>
+                                        <th class="text-center">
+                                            <i class="icon-people"></i>
+                                        </th>
+                                        <th>Voucher number</th>
+                                        <th>Voucher status</th>
+                                        <th>Post Name</th>
+                                        <th>Store Group Name</th>
+                                        <th class="text-center">Detail</th>
+                                        <th class="text-center">Edit</th>
+                                        <th class="text-center">Delete</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="my-data">
+                                    <tr>
+                                        <td class="text-center">
+                                        </td>
+                                        <td>
+
+                                        </td>
+                                        <td class="text-center">
+
+                                        </td>
+                                        <td>
+
+                                        </td>
+                                        <td class="text-center">
+
+                                        </td>
+                                        <td>
+
+                                        </td>
+                                    </tr>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.col-->
+                </div>
+                <!-- /.row-->
+            </div>
+        </div>
+    </main>
+
+</div>
+<footer class="app-footer">
+    <div>
+
+    </div>
+    <div class="ml-auto">
+        <span>Powered by</span>
+        <a>AntiPhone</a>
+    </div>
+</footer>
+<!-- CoreUI and necessary plugins-->
+<script src="node_modules/jquery/dist/jquery.min.js"></script>
+<script src="node_modules/popper.js/dist/umd/popper.min.js"></script>
+<script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="node_modules/pace-progress/pace.min.js"></script>
+<script src="node_modules/perfect-scrollbar/dist/perfect-scrollbar.min.js"></script>
+<script src="node_modules/@coreui/coreui/dist/js/coreui.min.js"></script>
+<!-- Plugins and scripts required by this view-->
+<script src="node_modules/chart.js/dist/Chart.min.js"></script>
+<script src="node_modules/@coreui/coreui-plugin-chartjs-custom-tooltips/dist/js/custom-tooltips.min.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

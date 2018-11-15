@@ -1,0 +1,64 @@
+<div>
+    <h2 id="page-heading">
+        <span>Stores</span>
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-storeGroup" [routerLink]="['/storeGroup/new']">
+            <fa-icon [icon]="'plus'"></fa-icon>
+            <span >
+            Create new Store
+            </span>
+        </button>
+    </h2>
+    <-alert></-alert>
+    <br/>
+    <div class="table-responsive" *ngIf="stores">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+            <th><span>ID</span></th>
+            <th><span>Store ID</span></th>
+            <th><span>Store Name</span></th>
+            <th><span>Store Phone</span></th>
+            <th><span>Store Mail</span></th>
+            <th><span>Store Web</span></th>
+            <th><span>Store Description</span></th>
+            <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let storeGroup of stores ;trackBy: trackId">
+                <td><a [routerLink]="['/storeGroup', storeGroup.id, 'view' ]">{{storeGroup.id}}</a></td>
+                <td>{{storeGroup.storeID}}</td>
+                <td>{{storeGroup.storeName}}</td>
+                <td>{{storeGroup.storePhone}}</td>
+                <td>{{storeGroup.storeMail}}</td>
+                <td>{{storeGroup.storeWeb}}</td>
+                <td>{{storeGroup.storeDescription}}</td>
+                <td class="text-right">
+                    <div class="btn-group flex-btn-group-container">
+                        <button type="submit"
+                                [routerLink]="['/storeGroup', storeGroup.id, 'view' ]"
+                                class="btn btn-info btn-sm">
+                            <fa-icon [icon]="'eye'"></fa-icon>
+                            <span class="d-none d-md-inline">View</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/storeGroup', storeGroup.id, 'edit']"
+                                class="btn btn-primary btn-sm">
+                            <fa-icon [icon]="'pencil-alt'"></fa-icon>
+                            <span class="d-none d-md-inline">Edit</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/', { outlets: { popup: 'storeGroup/'+ storeGroup.id + '/delete'} }]"
+                                replaceUrl="true"
+                                queryParamsHandling="merge"
+                                class="btn btn-danger btn-sm">
+                            <fa-icon [icon]="'times'"></fa-icon>
+                            <span class="d-none d-md-inline">Delete</span>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

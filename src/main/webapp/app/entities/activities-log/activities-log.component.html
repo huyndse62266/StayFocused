@@ -1,0 +1,64 @@
+<div>
+    <h2 id="page-heading">
+        <span>Activities Logs</span>
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-activities-log" [routerLink]="['/activities-log/new']">
+            <fa-icon [icon]="'plus'"></fa-icon>
+            <span >
+            Create new Activities Log
+            </span>
+        </button>
+    </h2>
+    <-alert></-alert>
+    <br/>
+    <div class="table-responsive" *ngIf="activitiesLogs">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+            <th><span>ID</span></th>
+            <th><span>Activities Log ID</span></th>
+            <th><span>Activities Log Date</span></th>
+            <th><span>Activities Log Point Received</span></th>
+            <th><span>Activities Log</span></th>
+            <th><span>User</span></th>
+            <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let activitiesLog of activitiesLogs ;trackBy: trackId">
+                <td><a [routerLink]="['/activities-log', activitiesLog.id, 'view' ]">{{activitiesLog.id}}</a></td>
+                <td>{{activitiesLog.activitiesLogID}}</td>
+                <td>{{activitiesLog.activitiesLogDate | date:'medium'}}</td>
+                <td>{{activitiesLog.activitiesLogPointReceived}}</td>
+                <td>{{activitiesLog.activitiesLog}}</td>
+                <td>
+                    {{activitiesLog.userId}}
+                </td>
+                <td class="text-right">
+                    <div class="btn-group flex-btn-group-container">
+                        <button type="submit"
+                                [routerLink]="['/activities-log', activitiesLog.id, 'view' ]"
+                                class="btn btn-info btn-sm">
+                            <fa-icon [icon]="'eye'"></fa-icon>
+                            <span class="d-none d-md-inline">View</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/activities-log', activitiesLog.id, 'edit']"
+                                class="btn btn-primary btn-sm">
+                            <fa-icon [icon]="'pencil-alt'"></fa-icon>
+                            <span class="d-none d-md-inline">Edit</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/', { outlets: { popup: 'activities-log/'+ activitiesLog.id + '/delete'} }]"
+                                replaceUrl="true"
+                                queryParamsHandling="merge"
+                                class="btn btn-danger btn-sm">
+                            <fa-icon [icon]="'times'"></fa-icon>
+                            <span class="d-none d-md-inline">Delete</span>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

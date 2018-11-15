@@ -1,0 +1,30 @@
+{
+    "name": "Role",
+    "fields": [
+        {
+            "fieldName": "roleID",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "roleNanme",
+            "fieldType": "String"
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipType": "one-to-many",
+            "relationshipName": "customer",
+            "otherEntityName": "customer",
+            "otherEntityRelationshipName": "role"
+        }
+    ],
+    "changelogDate": "20181001034224",
+    "entityTableName": "role",
+    "dto": "mapstruct",
+    "pagination": "no",
+    "service": "serviceImpl",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*"
+}

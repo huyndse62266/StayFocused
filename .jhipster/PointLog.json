@@ -1,0 +1,42 @@
+{
+    "name": "PointLog",
+    "fields": [
+        {
+            "fieldName": "pointLogID",
+            "fieldType": "Long"
+        },
+        {
+            "fieldName": "pointLogPointSpent",
+            "fieldType": "Long"
+        },
+        {
+            "fieldName": "pointLogDateUsed",
+            "fieldType": "Instant"
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipType": "one-to-one",
+            "relationshipName": "voucher",
+            "otherEntityName": "voucher",
+            "otherEntityField": "id",
+            "ownerSide": true,
+            "otherEntityRelationshipName": "pointLog"
+        },
+        {
+            "relationshipType": "many-to-one",
+            "relationshipName": "user",
+            "otherEntityName": "user",
+            "otherEntityField": "id"
+        }
+    ],
+    "changelogDate": "20181017005622",
+    "entityTableName": "point_log",
+    "dto": "mapstruct",
+    "pagination": "no",
+    "service": "serviceImpl",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*"
+}

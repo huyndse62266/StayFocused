@@ -1,0 +1,48 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+            <h2 id="-voucher-log-heading">Create or edit a Voucher Log</h2>
+            <div>
+                <-alert-error></-alert-error>
+                <div class="form-group" [hidden]="!voucherLog.id">
+                    <label for="id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id"
+                        [(ngModel)]="voucherLog.id" readonly />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_voucherLogID">Voucher Log ID</label>
+                    <input type="number" class="form-control" name="voucherLogID" id="field_voucherLogID"
+                        [(ngModel)]="voucherLog.voucherLogID" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_voucherLogStatus">Voucher Log Status</label>
+                    <input type="checkbox" class="form-control" name="voucherLogStatus" id="field_voucherLogStatus"
+                        [(ngModel)]="voucherLog.voucherLogStatus" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_voucherLogDateUsed">Voucher Log Date Used</label>
+                    <div class="d-flex">
+                        <input id="field_voucherLogDateUsed" type="datetime-local" class="form-control" name="voucherLogDateUsed" [(ngModel)]="voucherLogDateUsed"
+                        />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_username">Username</label>
+                    <select class="form-control" id="field_username" name="username" [(ngModel)]="voucherLog.usernameId" >
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="userOption.id" *ngFor="let userOption of users; trackBy: trackUserById">{{userOption.id}}</option>
+                    </select>
+                </div>
+            </div>
+            <div>
+                <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
+                    <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span>Cancel</span>
+                </button>
+                <button type="submit" id="save-entity" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span>Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

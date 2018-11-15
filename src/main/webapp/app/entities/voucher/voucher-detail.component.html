@@ -1,0 +1,41 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="voucher">
+            <h2><span>Voucher</span> {{voucher.id}}</h2>
+            <hr>
+            <-alert-error></-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span>Voucher ID</span></dt>
+                <dd>
+                    <span>{{voucher.voucherID}}</span>
+                </dd>
+                <dt><span>Voucher Number</span></dt>
+                <dd>
+                    <span>{{voucher.voucherNumber}}</span>
+                </dd>
+                <dt><span>Voucher Status</span></dt>
+                <dd>
+                    <span>{{voucher.voucherStatus}}</span>
+                </dd>
+                <dt><span>Post</span></dt>
+                <dd>
+                    <div *ngIf="voucher.postId">
+                        <a [routerLink]="['/post', voucher.postId, 'view']">{{voucher.postId}}</a>
+                    </div>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/voucher', voucher.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span> Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

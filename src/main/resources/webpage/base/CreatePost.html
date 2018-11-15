@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<!--
+* CoreUI - Free Bootstrap Admin Template
+* @version v2.1.6
+* @link https://coreui.io
+* Copyright (c) 2018 creativeLabs Łukasz Holeczek
+* Licensed under MIT (https://coreui.io/license)
+-->
+
+<html lang="en">
+<head>
+    <base href="./../">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <meta name="description" content="CoreUI - Open Source Bootstrap Admin Template">
+    <meta name="author" content="Łukasz Holeczek">
+    <meta name="keyword" content="Bootstrap,Admin,Template,Open,Source,jQuery,CSS,HTML,RWD,Dashboard">
+    <title>Create new Post Page</title>
+    <!-- Icons-->
+    <link href="node_modules/@coreui/icons/css/coreui-icons.min.css" rel="stylesheet">
+    <link href="node_modules/flag-icon-css/css/flag-icon.min.css" rel="stylesheet">
+    <link href="node_modules/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link href="node_modules/simple-line-icons/css/simple-line-icons.css" rel="stylesheet">
+    <!-- Main styles for this application-->
+    <link href="css/style.css" rel="stylesheet">
+    <link href="vendors/pace-progress/css/pace.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/solid.css" integrity="sha384-osqezT+30O6N/vsMqwW8Ch6wKlMofqueuia2H7fePy42uC05rm1G+BUPSd2iBSJL" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/fontawesome.css" integrity="sha384-BzCy2fixOYd0HObpx3GMefNqdbA7Qjcc91RgYeDjrHTIEXqiF00jKvgQG0+zY/7I" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!-- Global site tag (gtag.js) - Google Analytics-->
+    <script async="" src="https://www.googletagmanager.com/gtag/js?id=UA-118965717-3"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.5.8/firebase.js"></script>
+    <script>
+        // Initialize Firebase
+        var config = {
+            apiKey: "AIzaSyAXc2NcUBpLyuHYsldCTGbdWnQB5MS1YUY",
+            authDomain: "my-project-1540221431430.firebaseapp.com",
+            databaseURL: "https://my-project-1540221431430.firebaseio.com",
+            projectId: "my-project-1540221431430",
+            storageBucket: "my-project-1540221431430.appspot.com",
+            messagingSenderId: "255361423071"
+        };
+        firebase.initializeApp(config);
+    </script>
+
+
+
+
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        console.log(localStorage.getItem("storeGroupID"));
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+        // Shared ID
+        gtag('config', 'UA-118965717-3');
+        // Bootstrap ID
+        gtag('config', 'UA-118965717-5');
+
+        window.onload = function () {
+            if(localStorage.getItem("access_token") === null){
+                window.location.href = "LoginPage.html";
+            }
+            getStoreGroup();
+        }
+
+        function logout() {
+            localStorage.removeItem("access_token");
+            window.location.href = "LoginPage.html";
+        }
+
+        let uploadTask = null;
+        function create() {
+            var filename = document.getElementById("imageInput").files[0].name;
+            let storageRef = firebase.storage().ref('photos/' + filename);
+            let firstFile = document.getElementById("imageInput").files[0]; // upload the first file only
+            uploadTask = storageRef.put(firstFile);
+
+            uploadTask.on('state_changed', function(snapshot){
+
+            }, function(error) {
+                // Handle unsuccessful uploads
+            }, function() {
+
+                uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+                    console.log('File available at', downloadURL);
+                    callApiCreatePost(downloadURL);
+                });
+            });
+
+        }
+
+
+        function getStoreGroup () {
+            var token = localStorage.getItem("access_token");
+            var storeID = localStorage.getItem('storeGroupID');
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET","http://localhost:8080/api/store-groups/"+storeID);
+            xhr.setRequestHeader("Content-Type", "application/json; charset=UTF-8");
+            xhr.setRequestHeader("Authorization","Bearer "+token);
+            xhr.send();
+            xhr.onreadystatechange = function () {
+                if(this.readyState == 4 && this.status == 200) {
+                    var data = JSON.parse(xhr.responseText).data;
+                    document.getElementById('storeGroupIDtxt').value = data.storeGroupID;
+                    document.getElementById('StoreGroupNametxt').value = data.storeGroupName;
+
+                }
+            }
+
+        }
+
+
+        function callApiCreatePost(imageUrl) {
+            var token = localStorage.getItem("access_token");
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST","http://localhost:8080/api/posts/");
+            xhr.setRequestHeader("Content-Type", "application/json; charset=UTF-8");
+            xhr.setRequestHeader("Authorization","Bearer "+token);
+
+            var post = {
+                "postName": document.getElementById("Nametxt").value,
+                "postTitle": document.getElementById("Titletxt").value,
+                "postDescription": document.getElementById("Descriptiontxt").value,
+                "postStartDate": document.getElementById("StartDatetxt").value,
+                "postEndDate": document.getElementById("EndDatetxt").value,
+                "postBanner": imageUrl,
+                "postDiscountRate": document.getElementById("discountratetxt").value,
+                "storeGroup": {
+                    "storeGroupID" :2
+                }
+
+            }
+            xhr.send(JSON.stringify(post));
+            xhr.onreadystatechange = function () {
+                console.log('hahahaha');
+                if(xhr.readyState == 4 && xhr.status == 200){
+                    console.log(xhr.responseText);
+                    var respone = JSON.parse(xhr.responseText);
+                    if(respone.status === 200){
+                        document.getElementById('resultlbl').innerText = respone.message;
+                    }else{
+                        document.getElementById('resultlbl').innerText = respone.data;
+                    }
+                }
+
+            }
+        }
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    window.document.getElementById('Bannertxt').src = e.target.result;
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function reset() {
+            document.getElementById("Nametxt").value = '';
+            document.getElementById("Titletxt").value = '';
+            document.getElementById("Descriptiontxt").value= '';
+            document.getElementById("StartDatetxt").value= '';
+            document.getElementById("EndDatetxt").value= '';
+            document.getElementById("discountratetxt").value = '';
+            document.getElementById("Bannertxt").src = 'https://increasify.com.au/wp-content/uploads/2016/08/default-image.png';
+        }
+
+    </script>
+</head>
+<body class="app header-fixed sidebar-fixed aside-menu-fixed sidebar-lg-show">
+<header class="app-header navbar">
+    <div style="width: 35%; margin-right: -122%">
+        <div class="col-6 col-sm-4 col-md-2 col-xl mb-3 mb-xl-0">
+            <button class="btn btn-block btn-danger active" type="button" aria-pressed="true" onclick="logout()">Log out</button>
+        </div>
+    </div>
+</header>
+<div class="app-body">
+    <div class="sidebar">
+        <nav class="sidebar-nav">
+            <ul class="nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="Dashboard.html">
+                        <i class="nav-icon icon-speedometer"></i> Dashboard
+                    </a>
+                </li>
+                <li class="nav-title"></li>
+                <li class="nav-item">
+                    <a class="nav-link" href="ListStoreGroup.html">
+                        <i class="nav-icon icon-drop"></i> Store Group</a>
+                </li>
+
+                <li class="nav-title"></li>
+                <li class="nav-item">
+                    <a class="nav-link" href="ListStore.html">
+                        <i class="nav-icon icon-drop"></i> Stores</a>
+                </li>
+                <li class="nav-title"></li>
+                <li class="nav-item">
+                    <a class="nav-link" href="ListPost.html">
+                        <i class="nav-icon icon-drop"></i> Post</a>
+                </li>
+                <li class="nav-title"></li>
+                <li class="nav-item">
+                    <a class="nav-link" href="ListVoucher.html">
+                        <i class="nav-icon icon-drop"></i> Voucher</a>
+                </li>
+            </ul>
+        </nav>
+        <!--<button class="sidebar-minimizer brand-minimizer" type="button"></button>-->
+    </div>
+    <main class="main">
+        <!-- Breadcrumb-->
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="Dashboard.html">Home</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a href="ListStoreGroup.html">Store Group</a>
+            </li>
+            <li class="breadcrumb-item active">Post</li>
+            <!-- Breadcrumb Menu-->
+
+        </ol>   
+        <div class="container-fluid">
+            <div class="animated fadeIn">
+
+                <div class="row" style="width: 130%;padding-left: 23%;">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <strong>Create new Post</strong></div>
+                            <div class="card-body">
+                                <form class="form-horizontal" action="" method="post" enctype="multipart/form-data">
+                                    <div class="form-group row">
+                                        <label class="col-md-3 col-form-label"></label>
+                                        <div class="col-md-9">
+                                            <label id="resultlbl"></label>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-md-3 col-form-label" for="Nametxt">Store Group Name</label>
+                                        <div class="col-md-9">
+                                            <input type="hidden" id="storeGroupIDtxt">
+                                            <input class="form-control" id="StoreGroupNametxt" type="text" name="text-input" disabled>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-md-3 col-form-label" for="Nametxt">Post Name</label>
+                                        <div class="col-md-9">
+                                            <input class="form-control" id="Nametxt" type="text" name="text-input">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-md-3 col-form-label" for="Nametxt">Title</label>
+                                        <div class="col-md-9">
+                                            <input class="form-control" id="Titletxt" type="text" name="text-input">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-md-3 col-form-label" for="Bannertxt">Banner</label>
+                                        <div class="col-md-9">
+
+                                            <img id="Bannertxt" src="https://increasify.com.au/wp-content/uploads/2016/08/default-image.png" style="width: 200px; height: 100px;">
+                                            <br/>                                            <br/>
+                                            <input type='file' onchange="readURL(this);" id="imageInput"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-md-3 col-form-label" for="Nametxt">Date</label>
+                                        <div class="col-md-9">
+                                            <input class="form-control" id="StartDatetxt" type="date" name="date-input" style="width: 30%; float: left" placeholder="date">
+                                            <label style="float: left; padding-top: 5px; padding-left: 83px">-</label>
+                                            <input class="form-control" id="EndDatetxt" type="date" name="date-input" style="width: 30%; margin-left: 60%" placeholder="date">
+                                        </div>
+
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-md-3 col-form-label" for="discountratetxt">Discount Rate</label>
+                                        <div class="col-md-9">
+                                            <input class="form-control" id="discountratetxt" type="number" name="text-input" style="width: 30%">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-md-3 col-form-label" for="Descriptiontxt">Description</label>
+                                        <div class="col-md-9">
+                                            <textarea class="form-control" id="Descriptiontxt" name="textarea-input" rows="9" placeholder="Content.."></textarea>
+                                        </div>
+                                    </div>
+
+
+                                </form>
+                            </div>
+                            <div class="card-footer">
+                                <button class="btn btn-sm btn-primary" type="submit" onclick="create()">
+                                    <i class="fa fa-dot-circle-o"></i> Submit</button>
+                                <button class="btn btn-sm btn-danger" type="reset" onclick="reset()">
+                                    <i class="fa fa-ban"></i> Reset</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- /.col-->
+                </div>
+
+
+
+
+
+            </div>
+        </div>
+    </main>
+
+</div>
+<footer class="app-footer">
+    <div>
+
+    </div>
+    <div class="ml-auto">
+        <span>Powered by</span>
+        <a>AntiPhone</a>
+    </div>
+</footer>
+<!-- CoreUI and necessary plugins-->
+<script src="node_modules/jquery/dist/jquery.min.js"></script>
+<script src="node_modules/popper.js/dist/umd/popper.min.js"></script>
+<script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="node_modules/pace-progress/pace.min.js"></script>
+<script src="node_modules/perfect-scrollbar/dist/perfect-scrollbar.min.js"></script>
+<script src="node_modules/@coreui/coreui/dist/js/coreui.min.js"></script>
+</body>
+</html>

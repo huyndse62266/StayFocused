@@ -1,0 +1,70 @@
+<div>
+    <h2 id="page-heading">
+        <span>Customers</span>
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-customer" [routerLink]="['/customer/new']">
+            <fa-icon [icon]="'plus'"></fa-icon>
+            <span >
+            Create new Customer
+            </span>
+        </button>
+    </h2>
+    <-alert></-alert>
+    <br/>
+    <div class="table-responsive" *ngIf="customers">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+            <th><span>ID</span></th>
+            <th><span>Customer ID</span></th>
+            <th><span>Customer Password</span></th>
+            <th><span>Customer Full Name</span></th>
+            <th><span>Customer DOB</span></th>
+            <th><span>Customer Phone</span></th>
+            <th><span>Customer Address</span></th>
+            <th><span>Role</span></th>
+            <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let customer of customers ;trackBy: trackId">
+                <td><a [routerLink]="['/customer', customer.id, 'view' ]">{{customer.id}}</a></td>
+                <td>{{customer.customerID}}</td>
+                <td>{{customer.customerPassword}}</td>
+                <td>{{customer.customerFullName}}</td>
+                <td>{{customer.customerDOB | date:'medium'}}</td>
+                <td>{{customer.customerPhone}}</td>
+                <td>{{customer.customerAddress}}</td>
+                <td>
+                    <div *ngIf="customer.roleId">
+                        <a [routerLink]="['../role', customer.roleId , 'view' ]" >{{customer.roleId}}</a>
+                    </div>
+                </td>
+                <td class="text-right">
+                    <div class="btn-group flex-btn-group-container">
+                        <button type="submit"
+                                [routerLink]="['/customer', customer.id, 'view' ]"
+                                class="btn btn-info btn-sm">
+                            <fa-icon [icon]="'eye'"></fa-icon>
+                            <span class="d-none d-md-inline">View</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/customer', customer.id, 'edit']"
+                                class="btn btn-primary btn-sm">
+                            <fa-icon [icon]="'pencil-alt'"></fa-icon>
+                            <span class="d-none d-md-inline">Edit</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/', { outlets: { popup: 'customer/'+ customer.id + '/delete'} }]"
+                                replaceUrl="true"
+                                queryParamsHandling="merge"
+                                class="btn btn-danger btn-sm">
+                            <fa-icon [icon]="'times'"></fa-icon>
+                            <span class="d-none d-md-inline">Delete</span>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

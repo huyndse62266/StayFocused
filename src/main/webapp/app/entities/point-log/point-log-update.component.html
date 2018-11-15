@@ -1,0 +1,55 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+            <h2 id="-point-log-heading">Create or edit a Point Log</h2>
+            <div>
+                <-alert-error></-alert-error>
+                <div class="form-group" [hidden]="!pointLog.id">
+                    <label for="id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id"
+                        [(ngModel)]="pointLog.id" readonly />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_pointLogID">Point Log ID</label>
+                    <input type="number" class="form-control" name="pointLogID" id="field_pointLogID"
+                        [(ngModel)]="pointLog.pointLogID" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_pointLogPointSpent">Point Log Point Spent</label>
+                    <input type="number" class="form-control" name="pointLogPointSpent" id="field_pointLogPointSpent"
+                        [(ngModel)]="pointLog.pointLogPointSpent" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_pointLogDateUsed">Point Log Date Used</label>
+                    <div class="d-flex">
+                        <input id="field_pointLogDateUsed" type="datetime-local" class="form-control" name="pointLogDateUsed" [(ngModel)]="pointLogDateUsed"
+                        />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_voucher">Voucher</label>
+                    <select class="form-control" id="field_voucher" name="voucher" [(ngModel)]="pointLog.voucherId">
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="voucherOption.id" *ngFor="let voucherOption of vouchers; trackBy: trackVoucherById">{{voucherOption.id}}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_user">User</label>
+                    <select class="form-control" id="field_user" name="user" [(ngModel)]="pointLog.userId" >
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="userOption.id" *ngFor="let userOption of users; trackBy: trackUserById">{{userOption.id}}</option>
+                    </select>
+                </div>
+            </div>
+            <div>
+                <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
+                    <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span>Cancel</span>
+                </button>
+                <button type="submit" id="save-entity" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span>Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

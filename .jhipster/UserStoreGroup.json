@@ -1,0 +1,34 @@
+{
+    "name": "UserStoreGroup",
+    "fields": [
+        {
+            "fieldName": "storeGroupID",
+            "fieldType": "Long"
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipType": "one-to-one",
+            "relationshipName": "user",
+            "otherEntityName": "user",
+            "otherEntityField": "id",
+            "ownerSide": true,
+            "otherEntityRelationshipName": "userStoreGroup"
+        },
+        {
+            "relationshipType": "one-to-many",
+            "relationshipName": "storeGroup",
+            "otherEntityName": "storeGroup",
+            "otherEntityRelationshipName": "userStoreGroup"
+        }
+    ],
+    "changelogDate": "20181113045321",
+    "entityTableName": "user_store_group",
+    "dto": "mapstruct",
+    "pagination": "no",
+    "service": "serviceImpl",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*"
+}

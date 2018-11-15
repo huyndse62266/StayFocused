@@ -1,0 +1,41 @@
+{
+    "name": "VoucherLog",
+    "fields": [
+        {
+            "fieldName": "voucherLogID",
+            "fieldType": "Long"
+        },
+        {
+            "fieldName": "voucherLogStatus",
+            "fieldType": "Boolean"
+        },
+        {
+            "fieldName": "voucherLogDateUsed",
+            "fieldType": "Instant"
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipType": "many-to-one",
+            "relationshipName": "username",
+            "otherEntityName": "user",
+            "otherEntityField": "id"
+        },
+        {
+            "relationshipType": "one-to-one",
+            "relationshipName": "voucherID",
+            "otherEntityName": "voucher",
+            "ownerSide": false,
+            "otherEntityRelationshipName": "voucherLogID"
+        }
+    ],
+    "changelogDate": "20181014175936",
+    "entityTableName": "voucher_log",
+    "dto": "mapstruct",
+    "pagination": "no",
+    "service": "serviceImpl",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*"
+}

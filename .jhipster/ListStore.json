@@ -1,0 +1,34 @@
+{
+    "name": "ListStore",
+    "fields": [
+        {
+            "fieldName": "storeID",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "storeName",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "storeAddress",
+            "fieldType": "String"
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipName": "store",
+            "otherEntityName": "store",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
+        }
+    ],
+    "changelogDate": "20181007133207",
+    "entityTableName": "list_store",
+    "dto": "mapstruct",
+    "pagination": "no",
+    "service": "serviceImpl",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*"
+}

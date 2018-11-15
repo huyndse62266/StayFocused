@@ -1,0 +1,53 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+            <h2 id="-activities-log-heading">Create or edit a Activities Log</h2>
+            <div>
+                <-alert-error></-alert-error>
+                <div class="form-group" [hidden]="!activitiesLog.id">
+                    <label for="id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id"
+                        [(ngModel)]="activitiesLog.id" readonly />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_activitiesLogID">Activities Log ID</label>
+                    <input type="number" class="form-control" name="activitiesLogID" id="field_activitiesLogID"
+                        [(ngModel)]="activitiesLog.activitiesLogID" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_activitiesLogDate">Activities Log Date</label>
+                    <div class="d-flex">
+                        <input id="field_activitiesLogDate" type="datetime-local" class="form-control" name="activitiesLogDate" [(ngModel)]="activitiesLogDate"
+                        />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_activitiesLogPointReceived">Activities Log Point Received</label>
+                    <input type="number" class="form-control" name="activitiesLogPointReceived" id="field_activitiesLogPointReceived"
+                        [(ngModel)]="activitiesLog.activitiesLogPointReceived" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_activitiesLog">Activities Log</label>
+                    <input type="number" class="form-control" name="activitiesLog" id="field_activitiesLog"
+                        [(ngModel)]="activitiesLog.activitiesLog" />
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_user">User</label>
+                    <select class="form-control" id="field_user" name="user" [(ngModel)]="activitiesLog.userId" >
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="userOption.id" *ngFor="let userOption of users; trackBy: trackUserById">{{userOption.id}}</option>
+                    </select>
+                </div>
+            </div>
+            <div>
+                <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
+                    <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span>Cancel</span>
+                </button>
+                <button type="submit" id="save-entity" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span>Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

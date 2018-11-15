@@ -1,0 +1,52 @@
+{
+    "name": "Post",
+    "fields": [
+        {
+            "fieldName": "postID",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "postName",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "postDescription",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "postStartDate",
+            "fieldType": "Instant"
+        },
+        {
+            "fieldName": "postEndDate",
+            "fieldType": "Instant"
+        },
+        {
+            "fieldName": "postBanner",
+            "fieldType": "String"
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipName": "store",
+            "otherEntityName": "store",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
+        },
+        {
+            "relationshipType": "one-to-many",
+            "relationshipName": "voucher",
+            "otherEntityName": "voucher",
+            "otherEntityRelationshipName": "post"
+        }
+    ],
+    "changelogDate": "20181007133208",
+    "entityTableName": "post",
+    "dto": "mapstruct",
+    "pagination": "no",
+    "service": "serviceImpl",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*"
+}

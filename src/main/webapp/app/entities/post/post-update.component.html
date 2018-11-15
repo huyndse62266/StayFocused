@@ -1,0 +1,65 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+            <h2 id="-post-heading">Create or edit a Post</h2>
+            <div>
+                <-alert-error></-alert-error>
+                <div class="form-group" [hidden]="!post.id">
+                    <label for="id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id"
+                        [(ngModel)]="post.id" readonly />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_postID">Post ID</label>
+                    <input type="text" class="form-control" name="postID" id="field_postID"
+                        [(ngModel)]="post.postID" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_postName">Post Name</label>
+                    <input type="text" class="form-control" name="postName" id="field_postName"
+                        [(ngModel)]="post.postName" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_postDescription">Post Description</label>
+                    <input type="text" class="form-control" name="postDescription" id="field_postDescription"
+                        [(ngModel)]="post.postDescription" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_postStartDate">Post Start Date</label>
+                    <div class="d-flex">
+                        <input id="field_postStartDate" type="datetime-local" class="form-control" name="postStartDate" [(ngModel)]="postStartDate"
+                        />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_postEndDate">Post End Date</label>
+                    <div class="d-flex">
+                        <input id="field_postEndDate" type="datetime-local" class="form-control" name="postEndDate" [(ngModel)]="postEndDate"
+                        />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_postBanner">Post Banner</label>
+                    <input type="text" class="form-control" name="postBanner" id="field_postBanner"
+                        [(ngModel)]="post.postBanner" />
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_store">Store</label>
+                    <select class="form-control" id="field_store" name="storeGroup" [(ngModel)]="post.storeId" >
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="storeOption.id" *ngFor="let storeOption of stores; trackBy: trackStoreById">{{storeOption.id}}</option>
+                    </select>
+                </div>
+            </div>
+            <div>
+                <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
+                    <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span>Cancel</span>
+                </button>
+                <button type="submit" id="save-entity" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span>Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

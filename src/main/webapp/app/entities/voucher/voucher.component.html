@@ -1,0 +1,64 @@
+<div>
+    <h2 id="page-heading">
+        <span>Vouchers</span>
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-voucher" [routerLink]="['/voucher/new']">
+            <fa-icon [icon]="'plus'"></fa-icon>
+            <span >
+            Create new Voucher
+            </span>
+        </button>
+    </h2>
+    <-alert></-alert>
+    <br/>
+    <div class="table-responsive" *ngIf="vouchers">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+            <th><span>ID</span></th>
+            <th><span>Voucher ID</span></th>
+            <th><span>Voucher Number</span></th>
+            <th><span>Voucher Status</span></th>
+            <th><span>Post</span></th>
+            <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let voucher of vouchers ;trackBy: trackId">
+                <td><a [routerLink]="['/voucher', voucher.id, 'view' ]">{{voucher.id}}</a></td>
+                <td>{{voucher.voucherID}}</td>
+                <td>{{voucher.voucherNumber}}</td>
+                <td>{{voucher.voucherStatus}}</td>
+                <td>
+                    <div *ngIf="voucher.postId">
+                        <a [routerLink]="['../post', voucher.postId , 'view' ]" >{{voucher.postId}}</a>
+                    </div>
+                </td>
+                <td class="text-right">
+                    <div class="btn-group flex-btn-group-container">
+                        <button type="submit"
+                                [routerLink]="['/voucher', voucher.id, 'view' ]"
+                                class="btn btn-info btn-sm">
+                            <fa-icon [icon]="'eye'"></fa-icon>
+                            <span class="d-none d-md-inline">View</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/voucher', voucher.id, 'edit']"
+                                class="btn btn-primary btn-sm">
+                            <fa-icon [icon]="'pencil-alt'"></fa-icon>
+                            <span class="d-none d-md-inline">Edit</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/', { outlets: { popup: 'voucher/'+ voucher.id + '/delete'} }]"
+                                replaceUrl="true"
+                                queryParamsHandling="merge"
+                                class="btn btn-danger btn-sm">
+                            <fa-icon [icon]="'times'"></fa-icon>
+                            <span class="d-none d-md-inline">Delete</span>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

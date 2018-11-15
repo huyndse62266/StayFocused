@@ -1,0 +1,46 @@
+{
+    "name": "Customer",
+    "fields": [
+        {
+            "fieldName": "customerID",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "customerPassword",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "customerFullName",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "customerDOB",
+            "fieldType": "Instant"
+        },
+        {
+            "fieldName": "customerPhone",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "customerAddress",
+            "fieldType": "String"
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipName": "role",
+            "otherEntityName": "role",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
+        }
+    ],
+    "changelogDate": "20181001034223",
+    "entityTableName": "customer",
+    "dto": "mapstruct",
+    "pagination": "no",
+    "service": "serviceImpl",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*"
+}

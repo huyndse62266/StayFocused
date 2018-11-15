@@ -1,0 +1,39 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="voucherLog">
+            <h2><span>Voucher Log</span> {{voucherLog.id}}</h2>
+            <hr>
+            <-alert-error></-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span>Voucher Log ID</span></dt>
+                <dd>
+                    <span>{{voucherLog.voucherLogID}}</span>
+                </dd>
+                <dt><span>Voucher Log Status</span></dt>
+                <dd>
+                    <span>{{voucherLog.voucherLogStatus}}</span>
+                </dd>
+                <dt><span>Voucher Log Date Used</span></dt>
+                <dd>
+                    <span>{{voucherLog.voucherLogDateUsed}}</span>
+                </dd>
+                <dt><span>Username</span></dt>
+                <dd>
+                    {{voucherLog.usernameId}}
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/voucher-log', voucherLog.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span> Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

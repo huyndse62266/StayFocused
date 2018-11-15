@@ -1,0 +1,21 @@
+{
+    "name": "StoreGroup",
+    "fields": [],
+    "relationships": [
+        {
+            "relationshipName": "userStoreGroup",
+            "otherEntityName": "userStoreGroup",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
+        }
+    ],
+    "changelogDate": "20181014115328",
+    "entityTableName": "store_group",
+    "dto": "mapstruct",
+    "pagination": "no",
+    "service": "serviceImpl",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*"
+}

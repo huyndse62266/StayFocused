@@ -1,0 +1,53 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="post">
+            <h2><span>Post</span> {{post.id}}</h2>
+            <hr>
+            <-alert-error></-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span>Post ID</span></dt>
+                <dd>
+                    <span>{{post.postID}}</span>
+                </dd>
+                <dt><span>Post Name</span></dt>
+                <dd>
+                    <span>{{post.postName}}</span>
+                </dd>
+                <dt><span>Post Description</span></dt>
+                <dd>
+                    <span>{{post.postDescription}}</span>
+                </dd>
+                <dt><span>Post Start Date</span></dt>
+                <dd>
+                    <span>{{post.postStartDate}}</span>
+                </dd>
+                <dt><span>Post End Date</span></dt>
+                <dd>
+                    <span>{{post.postEndDate}}</span>
+                </dd>
+                <dt><span>Post Banner</span></dt>
+                <dd>
+                    <span>{{post.postBanner}}</span>
+                </dd>
+                <dt><span>Store</span></dt>
+                <dd>
+                    <div *ngIf="post.storeId">
+                        <a [routerLink]="['/storeGroup', post.storeId, 'view']">{{post.storeId}}</a>
+                    </div>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/post', post.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span> Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

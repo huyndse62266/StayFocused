@@ -1,0 +1,22 @@
+{
+    "name": "Voucher",
+    "fields": [],
+    "relationships": [
+        {
+            "relationshipType": "one-to-one",
+            "relationshipName": "pointLog",
+            "otherEntityName": "pointLog",
+            "ownerSide": false,
+            "otherEntityRelationshipName": "voucher"
+        }
+    ],
+    "changelogDate": "20181007133209",
+    "entityTableName": "voucher",
+    "dto": "mapstruct",
+    "pagination": "no",
+    "service": "serviceImpl",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*"
+}

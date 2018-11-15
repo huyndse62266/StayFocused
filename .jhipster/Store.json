@@ -1,0 +1,52 @@
+{
+    "name": "Store",
+    "fields": [
+        {
+            "fieldName": "storeID",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "storeName",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "storePhone",
+            "fieldType": "Long"
+        },
+        {
+            "fieldName": "storeMail",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "storeWeb",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "storeDescription",
+            "fieldType": "String"
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipType": "one-to-many",
+            "relationshipName": "post",
+            "otherEntityName": "post",
+            "otherEntityRelationshipName": "store"
+        },
+        {
+            "relationshipType": "one-to-many",
+            "relationshipName": "listStore",
+            "otherEntityName": "listStore",
+            "otherEntityRelationshipName": "store"
+        }
+    ],
+    "changelogDate": "20181007133206",
+    "entityTableName": "store",
+    "dto": "mapstruct",
+    "pagination": "no",
+    "service": "serviceImpl",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*"
+}

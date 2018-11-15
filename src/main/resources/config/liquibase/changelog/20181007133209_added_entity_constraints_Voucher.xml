@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+    <!--
+        Added the constraints for entity Voucher.
+    -->
+    <changeSet id="20181007133209-2" author="jhipster">
+        
+        <addForeignKeyConstraint baseColumnNames="post_id"
+                                 baseTableName="voucher"
+                                 constraintName="fk_voucher_post_id"
+                                 referencedColumnNames="post_id"
+                                 referencedTableName="post"/>
+
+    </changeSet>
+</databaseChangeLog>

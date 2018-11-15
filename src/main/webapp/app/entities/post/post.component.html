@@ -1,0 +1,70 @@
+<div>
+    <h2 id="page-heading">
+        <span>Posts</span>
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-post" [routerLink]="['/post/new']">
+            <fa-icon [icon]="'plus'"></fa-icon>
+            <span >
+            Create new Post
+            </span>
+        </button>
+    </h2>
+    <-alert></-alert>
+    <br/>
+    <div class="table-responsive" *ngIf="posts">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+            <th><span>ID</span></th>
+            <th><span>Post ID</span></th>
+            <th><span>Post Name</span></th>
+            <th><span>Post Description</span></th>
+            <th><span>Post Start Date</span></th>
+            <th><span>Post End Date</span></th>
+            <th><span>Post Banner</span></th>
+            <th><span>Store</span></th>
+            <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let post of posts ;trackBy: trackId">
+                <td><a [routerLink]="['/post', post.id, 'view' ]">{{post.id}}</a></td>
+                <td>{{post.postID}}</td>
+                <td>{{post.postName}}</td>
+                <td>{{post.postDescription}}</td>
+                <td>{{post.postStartDate | date:'medium'}}</td>
+                <td>{{post.postEndDate | date:'medium'}}</td>
+                <td>{{post.postBanner}}</td>
+                <td>
+                    <div *ngIf="post.storeId">
+                        <a [routerLink]="['../storeGroup', post.storeId , 'view' ]" >{{post.storeId}}</a>
+                    </div>
+                </td>
+                <td class="text-right">
+                    <div class="btn-group flex-btn-group-container">
+                        <button type="submit"
+                                [routerLink]="['/post', post.id, 'view' ]"
+                                class="btn btn-info btn-sm">
+                            <fa-icon [icon]="'eye'"></fa-icon>
+                            <span class="d-none d-md-inline">View</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/post', post.id, 'edit']"
+                                class="btn btn-primary btn-sm">
+                            <fa-icon [icon]="'pencil-alt'"></fa-icon>
+                            <span class="d-none d-md-inline">Edit</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/', { outlets: { popup: 'post/'+ post.id + '/delete'} }]"
+                                replaceUrl="true"
+                                queryParamsHandling="merge"
+                                class="btn btn-danger btn-sm">
+                            <fa-icon [icon]="'times'"></fa-icon>
+                            <span class="d-none d-md-inline">Delete</span>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

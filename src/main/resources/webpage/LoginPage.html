@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login Page</title>
+
+    <style>
+        /* Bordered form */
+
+        .form {
+            border: 3px solid #f1f1f1;
+            margin-top: 10%;
+            margin-left: 40%;
+            margin-right: 40%;
+        }
+
+        /* Full-width inputs */
+        input[type=text], input[type=password] {
+            width: 100%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+
+        /* Set a style for all buttons */
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 14px 20px;
+            margin: 8px 0;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        /* Add a hover effect for buttons */
+        button:hover {
+            opacity: 0.8;
+        }
+
+        /* Extra style for the cancel button (red) */
+        .registerbtn {
+            width: auto;
+            padding: 10px 18px;
+            background-color: #f44336;
+        }
+
+        /* Center the avatar image inside this container */
+        .imgcontainer {
+            text-align: center;
+            margin: 24px 0 12px 0;
+        }
+
+        /* Avatar image */
+
+        /* Add padding to containers */
+        .container {
+            padding: 16px;
+        }
+
+        /* The "Forgot password" text */
+        span.psw {
+            float: right;
+            padding-top: 16px;
+        }
+
+        /* Change styles for span and cancel button on extra small screens */
+        @media screen and (max-width: 300px) {
+            span.psw {
+                display: block;
+                float: none;
+            }
+            .cancelbtn {
+                width: 100%;
+            }
+        }
+    </style>
+    <script>
+        function Login() {
+            console.log('haha');
+            var xhr = new XMLHttpRequest();
+            var username = document.getElementById("Usernametxt").value;
+            var password = document.getElementById("Passwordtxt").value;
+            xhr.open("POST","http://localhost:8080/api/authenticate");
+            xhr.setRequestHeader("Content-Type", "application/json; charset=UTF-8");
+            var data = {
+                "username": username,
+                "password": password
+            }
+            var json = JSON.stringify(data);
+            xhr.send(json);
+            xhr.onreadystatechange =function () {
+                if(xhr.readyState === 4 && xhr.status === 200){
+                    console.log(xhr.responseText);
+                    changePage(xhr.responseText,username);
+                }
+                if(xhr.status === 401){
+                    document.getElementById("noti").innerText = "Wrong username or password";
+                }
+            }
+        }
+
+
+        function changePage(myToken,username){
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET","http://localhost:8080/api/users/find-role");
+            var idToken = JSON.parse(myToken).id_token;
+            xhr.setRequestHeader("Content-Type", "application/json; charset=UTF-8");
+            xhr.setRequestHeader("Authorization","Bearer " +idToken);
+            xhr.send();
+            xhr.onreadystatechange = function () {
+                if(this.readyState == 4 && this.status == 200){
+                    console.log(xhr.responseText);
+                    if(xhr.responseText === "ROLE_ADMIN"){
+                        localStorage.setItem("access_token",idToken);
+                        localStorage.removeItem("storeGroup");
+                        window.location.href = "ListStoreGroup.html";
+                    }
+                    if(xhr.responseText === "ROLE_SHOP_STAFF"){
+                        xhr.open("GET","http://localhost:8080/api/user-store-groups/users/"+username);
+                        xhr.setRequestHeader("Content-Type", "application/json; charset=UTF-8");
+                        xhr.setRequestHeader("Authorization", "Bearer "+idToken);
+                        xhr.send();
+                        xhr.onreadystatechange = function () {
+                            if (this.readyState == 4 && this.status == 200) {
+                                var storeGroup = xhr.responseText;
+                                console.log(storeGroup);
+                                localStorage.setItem("access_token",idToken);
+                                localStorage.setItem("storeGroup",storeGroup);
+                                window.location.href = "ListStoreGroup.html";
+                            }
+                        }
+                    }
+                    // if(xhr.responseText !== "ROLE_ADMIN" && xhr.responseText !== "ROLE_SHOP_STAFF"){
+                    //     document.getElementById("noti").innerText = "Access denied";
+                    // }
+                }
+            }
+
+        }
+
+        function moveRegisterPage() {
+            window.location.href = "RegisterPage.html";
+        }
+    </script>
+</head>
+<body>
+        <div class="form">
+            <div class="imgcontainer">
+                <img src="image/128x128.png" alt="Avatar" class="avatar">
+            </div>
+
+            <div class="container">
+                <label for="Usernametxt"><b>Username</b></label>
+                <input type="text" placeholder="Enter Username" name="" required id="Usernametxt">
+
+                <label for="Passwordtxt"><b>Password</b></label>
+                <input type="password" placeholder="Enter Password" name="psw" required id="Passwordtxt">
+
+                <label id="noti" style="color: red"></label>
+                <button type="submit" onclick="Login()">Login</button>
+                <label>
+                    <input type="checkbox" checked="checked" name="remember"> Remember me
+                </label>
+            </div>
+
+            <div class="container" style="background-color:#f1f1f1">
+                <span class="psw">Forgot <a href="#">password?</a></span>
+                <button type="button" class="registerbtn" onclick="moveRegisterPage()">Register</button>
+            </div>
+        </div>
+
+</body>
+
+</html>

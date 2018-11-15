@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<!--
+* CoreUI - Free Bootstrap Admin Template
+* @version v2.1.6
+* @link https://coreui.io
+* Copyright (c) 2018 creativeLabs Łukasz Holeczek
+* Licensed under MIT (https://coreui.io/license)
+-->
+
+<html lang="en">
+<head>
+    <base href="./../">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <meta name="description" content="CoreUI - Open Source Bootstrap Admin Template">
+    <meta name="author" content="Łukasz Holeczek">
+    <meta name="keyword" content="Bootstrap,Admin,Template,Open,Source,jQuery,CSS,HTML,RWD,Dashboard">
+    <title>Create New Store</title>
+    <!-- Icons-->
+    <link href="node_modules/@coreui/icons/css/coreui-icons.min.css" rel="stylesheet">
+    <link href="node_modules/flag-icon-css/css/flag-icon.min.css" rel="stylesheet">
+    <link href="node_modules/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link href="node_modules/simple-line-icons/css/simple-line-icons.css" rel="stylesheet">
+    <!-- Main styles for this application-->
+    <link href="css/style.css" rel="stylesheet">
+    <link href="vendors/pace-progress/css/pace.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!-- Global site tag (gtag.js) - Google Analytics-->
+    <script async="" src="https://www.googletagmanager.com/gtag/js?id=UA-118965717-3"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+        // Shared ID
+        gtag('config', 'UA-118965717-3');
+        // Bootstrap ID
+        gtag('config', 'UA-118965717-5');
+
+        window.onload = function () {
+            if(localStorage.getItem("access_token") === null){
+                window.location.href = "LoginPage.html";
+            }
+            getStoreGroup();
+        }
+
+
+        function logout() {
+            localStorage.removeItem("access_token");
+            window.location.href = "LoginPage.html";
+        }
+
+
+        function getStoreGroup () {
+            var token = localStorage.getItem("access_token");
+            var storeID = localStorage.getItem('storeGroupID');
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET","http://localhost:8080/api/store-groups/"+storeID);
+            xhr.setRequestHeader("Content-Type", "application/json; charset=UTF-8");
+            xhr.setRequestHeader("Authorization","Bearer "+token);
+            xhr.send();
+            xhr.onreadystatechange = function () {
+                if(this.readyState == 4 && this.status == 200) {
+                    var data = JSON.parse(xhr.responseText).data;
+                    document.getElementById('storeGroupIDtxt').value = data.storeGroupID;
+                    document.getElementById('StoreGroupNametxt').value = data.storeGroupName;
+
+                }
+            }
+
+        }
+
+
+        function create() {
+            var token = localStorage.getItem("access_token");
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST","http://localhost:8080/api/stores/");
+            xhr.setRequestHeader("Content-Type", "application/json; charset=UTF-8");
+            xhr.setRequestHeader("Authorization","Bearer "+token);
+            var storeGroup = {
+                "storeName": document.getElementById('Nametxt').value,
+                "storeAddress": document.getElementById('Addresstxt').value,
+                "storeLatitude": document.getElementById('Latitudetxt').value,
+                "storeLongitude": document.getElementById('Longitudetxt').value,
+                "storeGroup": {
+                    "storeGroupID": document.getElementById('storeGroupIDtxt').value
+                }
+            }
+            xhr.send(JSON.stringify(storeGroup));
+            xhr.onreadystatechange = function () {
+                console.log('hahahaha');
+                if(xhr.readyState == 4 && xhr.status == 200){
+                    console.log(xhr.responseText);
+                    var respone = JSON.parse(xhr.responseText);
+                    if(respone.status === 200){
+                        document.getElementById('resultlbl').innerText = respone.message;
+                    }else{
+                        document.getElementById('resultlbl').innerText = respone.data;
+                    }
+                }
+
+            }
+        }
+
+        function reset() {
+            document.getElementById('Nametxt').value = '';
+            document.getElementById('Addresstxt').value = '';
+            document.getElementById('Latitudetxt').value = '';
+            document.getElementById('Longitudetxt').value = '';
+        }
+
+    </script>
+</head>
+<body class="app header-fixed sidebar-fixed aside-menu-fixed sidebar-lg-show">
+<header class="app-header navbar">
+    <div style="width: 35%; margin-right: -122%">
+        <div class="col-6 col-sm-4 col-md-2 col-xl mb-3 mb-xl-0">
+            <button class="btn btn-block btn-danger active" type="button" aria-pressed="true" onclick="logout()">Log out</button>
+        </div>
+    </div>
+</header>
+<div class="app-body">
+    <div class="sidebar">
+        <nav class="sidebar-nav">
+            <ul class="nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="ListStoreGroup.html">
+                        <i class="nav-icon icon-speedometer"></i> Dashboard
+                    </a>
+                </li>
+                <li class="nav-title"></li>
+                <li class="nav-item">
+                    <a class="nav-link" href="ListStoreGroup.html">
+                        <i class="nav-icon icon-drop"></i> Store Group</a>
+                </li>
+
+                <li class="nav-title"></li>
+                <li class="nav-item">
+                    <a class="nav-link" href="ListStore.html">
+                        <i class="nav-icon icon-drop"></i> Stores</a>
+                </li>
+                <li class="nav-title"></li>
+                <li class="nav-item">
+                    <a class="nav-link" href="ListPost.html">
+                        <i class="nav-icon icon-drop"></i> Post</a>
+                </li>
+                <li class="nav-title"></li>
+                <li class="nav-item">
+                    <a class="nav-link" href="ListVoucher.html">
+                        <i class="nav-icon icon-drop"></i> Voucher</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+    <main class="main">
+        <!-- Breadcrumb-->
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="Dashboard.html">Home</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a href="ListStoreGroup.html">Store Group</a>
+            </li>
+            <li class="breadcrumb-item active">Stores</li>
+        </ol>
+        <div class="container-fluid">
+            <div class="animated fadeIn">
+
+                <div class="row" style="width: 130%;padding-left: 23%;">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <strong>Create Store</strong></div>
+                            <div class="card-body">
+                                <form class="form-horizontal" action="" method="post" enctype="multipart/form-data">
+                                    <div class="form-group row">
+                                        <label class="col-md-3 col-form-label"></label>
+                                        <div class="col-md-9">
+                                            <label id="resultlbl"></label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-md-3 col-form-label">Store Group Name</label>
+                                        <div class="col-md-9">
+                                            <input type="hidden" id="storeGroupIDtxt">
+                                            <input class="form-control" id="StoreGroupNametxt" type="text" name="disabled-input" disabled="">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-md-3 col-form-label" for="Nametxt">Name</label>
+                                        <div class="col-md-9">
+                                            <input class="form-control" id="Nametxt" type="text" name="text-input">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-md-3 col-form-label" for="Addresstxt">Address</label>
+                                        <div class="col-md-9">
+                                            <input class="form-control" id="Addresstxt" type="text" name="text-input">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row" style="width: 50%; float: left; margin-left: -2%">
+                                        <label class="col-md-3 col-form-label" for="Latitudetxt">Latitude</label>
+                                        <div class="col-md-9">
+                                            <input class="form-control" id="Latitudetxt" type="text" name="text-input" style="width: 60%; margin-left: 40%">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row" style="width: 50%; float: left; ">
+                                        <label class="col-md-3 col-form-label" for="Longitudetxt" style="margin-right: -100px; margin-left: 100px">Longitude</label>
+                                        <div class="col-md-9">
+                                            <input class="form-control" id="Longitudetxt" type="text" name="text-input" style="width: 60%; margin-left: 40%">
+                                        </div>
+                                    </div>
+
+
+                                </form>
+                            </div>
+                            <div class="card-footer">
+                                <button class="btn btn-sm btn-primary" type="submit" onclick="create()">
+                                    <i class="fa fa-dot-circle-o"></i> Submit</button>
+                                <button class="btn btn-sm btn-danger" type="reset" onclick="reset()">
+                                    <i class="fa fa-ban"></i> Reset</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- /.col-->
+                </div>
+
+
+
+
+
+            </div>
+        </div>
+    </main>
+    <aside class="aside-menu">
+        <ul class="nav nav-tabs" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" data-toggle="tab" href="#timeline" role="tab">
+                    <i class="icon-list"></i>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#messages" role="tab">
+                    <i class="icon-speech"></i>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#settings" role="tab">
+                    <i class="icon-settings"></i>
+                </a>
+            </li>
+        </ul>
+        <!-- Tab panes-->
+
+    </aside>
+</div>
+<footer class="app-footer">
+    <div>
+
+    </div>
+    <div class="ml-auto">
+        <span>Powered by</span>
+        <a>AntiPhone</a>
+    </div>
+</footer>
+<!-- CoreUI and necessary plugins-->
+<script src="node_modules/jquery/dist/jquery.min.js"></script>
+<script src="node_modules/popper.js/dist/umd/popper.min.js"></script>
+<script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="node_modules/pace-progress/pace.min.js"></script>
+<script src="node_modules/perfect-scrollbar/dist/perfect-scrollbar.min.js"></script>
+<script src="node_modules/@coreui/coreui/dist/js/coreui.min.js"></script>
+</body>
+</html>

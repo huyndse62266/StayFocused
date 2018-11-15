@@ -1,0 +1,26 @@
+{
+  "generator-jhipster": {
+    "promptValues": {
+      "packageName": "huynd"
+    },
+    "jhipsterVersion": "5.2.1",
+    "applicationType": "monolith",
+    "baseName": "MyProject7",
+    "packageName": "huynd",
+    "packageFolder": "huynd",
+    "serverPort": "8080",
+    "authenticationType": "jwt",
+    "cacheProvider": "no",
+    "websocket": false,
+    "databaseType": "sql",
+    "devDatabaseType": "mysql",
+    "prodDatabaseType": "mysql",
+    "searchEngine": false,
+    "messageBroker": false,
+    "serviceDiscoveryType": false,
+    "buildTool": "gradle",
+    "enableSwaggerCodegen": false,
+    "jwtSecretKey": "eb4bdfcfd0ff5783935b83026110aacc2650b340",
+    "enableTranslation": false
+  }
+}

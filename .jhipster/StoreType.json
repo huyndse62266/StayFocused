@@ -1,0 +1,30 @@
+{
+    "name": "StoreType",
+    "fields": [
+        {
+            "fieldName": "storeTypeID",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "storeTypeName",
+            "fieldType": "String"
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipType": "one-to-many",
+            "relationshipName": "storeGroup",
+            "otherEntityName": "storeGroup",
+            "otherEntityRelationshipName": "storeType"
+        }
+    ],
+    "changelogDate": "20181014115327",
+    "entityTableName": "store_type",
+    "dto": "mapstruct",
+    "pagination": "no",
+    "service": "serviceImpl",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*"
+}

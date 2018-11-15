@@ -1,0 +1,38 @@
+{
+    "name": "ActivitiesLog",
+    "fields": [
+        {
+            "fieldName": "activitiesLogID",
+            "fieldType": "Long"
+        },
+        {
+            "fieldName": "activitiesLogDate",
+            "fieldType": "Instant"
+        },
+        {
+            "fieldName": "activitiesLogPointReceived",
+            "fieldType": "Long"
+        },
+        {
+            "fieldName": "activitiesLog",
+            "fieldType": "Long"
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipType": "many-to-one",
+            "relationshipName": "user",
+            "otherEntityName": "user",
+            "otherEntityField": "id"
+        }
+    ],
+    "changelogDate": "20181017005624",
+    "entityTableName": "activities_log",
+    "dto": "mapstruct",
+    "pagination": "no",
+    "service": "serviceImpl",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*"
+}

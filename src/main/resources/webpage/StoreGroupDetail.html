@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<!--
+* CoreUI - Free Bootstrap Admin Template
+* @version v2.1.6
+* @link https://coreui.io
+* Copyright (c) 2018 creativeLabs Łukasz Holeczek
+* Licensed under MIT (https://coreui.io/license)
+-->
+
+<html lang="en">
+<head>
+    <base href="./">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <meta name="description" content="CoreUI - Open Source Bootstrap Admin Template">
+    <meta name="author" content="Łukasz Holeczek">
+    <meta name="keyword" content="Bootstrap,Admin,Template,Open,Source,jQuery,CSS,HTML,RWD,Dashboard">
+    <title>Store Group Detail Page</title>
+    <!-- Icons-->
+    <link href="node_modules/@coreui/icons/css/coreui-icons.min.css" rel="stylesheet">
+    <link href="node_modules/flag-icon-css/css/flag-icon.min.css" rel="stylesheet">
+    <link href="node_modules/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link href="node_modules/simple-line-icons/css/simple-line-icons.css" rel="stylesheet">
+    <!-- Main styles for this application-->
+    <link href="css/style.css" rel="stylesheet">
+    <link href="vendors/pace-progress/css/pace.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/solid.css" integrity="sha384-osqezT+30O6N/vsMqwW8Ch6wKlMofqueuia2H7fePy42uC05rm1G+BUPSd2iBSJL" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/fontawesome.css" integrity="sha384-BzCy2fixOYd0HObpx3GMefNqdbA7Qjcc91RgYeDjrHTIEXqiF00jKvgQG0+zY/7I" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!-- Global site tag (gtag.js) - Google Analytics-->
+    <script async="" src="https://www.googletagmanager.com/gtag/js?id=UA-118965717-3"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+
+        gtag('js', new Date());
+        // Shared ID
+        gtag('config', 'UA-118965717-3');
+        // Bootstrap ID
+        gtag('config', 'UA-118965717-5');
+
+        window.onload = function () {
+            if(localStorage.getItem("access_token") === null){
+                window.location.href = "LoginPage.html";
+            }
+            getStores();
+            getPosts();
+            getStoreGroupDetail();
+
+        }
+
+        function logout() {
+            localStorage.removeItem("access_token");
+            window.location.href = "LoginPage.html";
+        }
+
+        function getStores(){
+            var storeID = localStorage.getItem('storeGroupID');
+            var token = localStorage.getItem("access_token");
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET","http://localhost:8080/api/stores/store-groups/"+storeID);
+            xhr.setRequestHeader("Content-Type", "application/json; charset=UTF-8");
+            xhr.setRequestHeader("Authorization","Bearer "+token);
+            xhr.send();
+
+            xhr.onreadystatechange = function (){
+                if(this.readyState == 4 && this.status == 200){
+                    var status = JSON.parse(xhr.responseText).status;
+                    if(status === 200){
+                        var data = JSON.parse(xhr.responseText).data;
+                        var tbody = document.getElementById('my-data-store');
+                        var table = '<tr>';
+                        for (var i = 0; i< data.length;i++){
+
+                            table += '<td>' + (i+1)+'</td>';
+                            table += '<td style="width: 40%">' +data[i].storeName+'</td>';
+                            table += '<td style="width: 40%"> ' +data[i].storeAddress+'</td>';
+                            table += '<td class="text-center"><button class="btn" onclick="viewStoreDetail(this.id)" id="'+data[i].storeID+'"><i class="fas fa-info-circle" style="font-size:24px" "/></button></td>'
+                            table += '<td class="text-center"><button class="btn" onclick="editStore(this.id)" id="'+data[i].storeID+'"><i class="glyphicon glyphicon-pencil" style="font-size:22px"></button></td>'
+                            table += '<td class="text-center"><button class="btn" onclick="deleteStore(this.id)" id="'+data[i].storeID+'"><i class="fa fa-close" style="font-size:24px" /></button></td>'
+                            table += '</tr>';
+
+                        }
+                        table += '</tr>';
+                        tbody.innerHTML = table;
+                    }
+                    if(status === 400){
+                        var tbody = document.getElementById('my-data-store');
+                        var table = '<tr style="padding-left: 200%">';
+                        table += '<td colspan="6" style="text-align: center">Data Empty</td>'
+
+                        table += '</tr>';
+                        tbody.innerHTML = table;
+                    }
+
+                }
+            }
+        }
+
+        function getPosts(){
+            var storeID = localStorage.getItem('storeGroupID');
+            var token = localStorage.getItem("access_token");
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET","http://localhost:8080/api/posts/store-groups/"+storeID);
+            xhr.setRequestHeader("Content-Type", "application/json; charset=UTF-8");
+            xhr.setRequestHeader("Authorization","Bearer "+token);
+            xhr.send();
+
+            xhr.onreadystatechange = function (){
+                if(this.readyState == 4 && this.status == 200){
+                    var status = JSON.parse(xhr.responseText).status;
+                    var postRemainNumberVoucher = 0;
+                    var postTotalNumberVoucher = 0;
+                    if(status === 200) {
+                        var data = JSON.parse(xhr.responseText).data;
+                        console.log(data);
+                        var tbody = document.getElementById('my-data-post');
+                        var table = '<tr>';
+                        for (var i = 0; i < data.length; i++) {
+
+                            table += '<td>' + (i + 1) + '</td>';
+                            table += '<td>' + data[i].postName + '</td>';
+                            table += '<td>' + data[i].postTitle + '</td>';
+                            table += '<td>' + data[i].postStartDate + '</td>';
+                            table += '<td>' + data[i].postEndDate + '</td>';
+                            if(data[i].postRemainNumberVoucher !== null){
+                                table += '<td>' + data[i].postRemainNumberVoucher + '</td>';
+                            }else{
+                                table += '<td>' + postRemainNumberVoucher + '</td>';
+                            }
+                            if(data[i].postTotalNumberVoucher !== null){
+                                table += '<td>' + data[i].postTotalNumberVoucher + '</td>';
+                            }else{
+                                table += '<td>' + postTotalNumberVoucher + '</td>';
+                            }
+                            table += '<td> <div class="avatar" style="width: 90px;height: 60px;"><img class="img-avatar" src="'+data[i].postBanner +'"> </div>'
+                                // + data[i].postBanner +
+                                '</td>';
+                            table += '<td>' + data[i].postDescription + '</td>';
+                            table += '<td class="text-center"><button class="btn" onclick="viewPostDetail(this.id)" id="' + data[i].postID + '"><i class="fas fa-info-circle" style="font-size:24px" "/></button></td>'
+                            table += '<td class="text-center"><button class="btn" onclick="editPost(this.id)" id="' + data[i].postID + '"><i class="glyphicon glyphicon-pencil" style="font-size:22px"></button></td>'
+                            table += '<td class="text-center"><button class="btn" onclick="deletePost(this.id)" id="' + data[i].postID + '"><i class="fa fa-close" style="font-size:24px" /></button></td>'
+                            table += '</tr>';
+
+                        }
+                        table += '</tr>';
+                        tbody.innerHTML = table;
+                    }
+                    if(status === 400){
+                        var tbody = document.getElementById('my-data-post');
+                        var table = '<tr style="padding-left: 300%">';
+                        table += '<td colspan="12" style="text-align: center">Data Empty</td>'
+
+                        table += '</tr>';
+                        tbody.innerHTML = table;
+                    }
+                }
+            }
+        }
+
+        function deletePost(sendID) {
+            var xhr = new XMLHttpRequest();
+            var token = localStorage.getItem("access_token");
+            xhr.open("DELETE", "http://localhost:8080/api/posts/" + sendID);
+            xhr.setRequestHeader("Content-Type", "application/json; charset=UTF-8");
+            xhr.setRequestHeader("Authorization", "Bearer " + token);
+            xhr.send();
+            xhr.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    getStores();
+                    getPosts();
+                    getStoreGroupDetail();
+                }
+            }
+        }
+        function deleteStore(sendID) {
+            var xhr = new XMLHttpRequest();
+            var token = localStorage.getItem("access_token");
+            xhr.open("DELETE", "http://localhost:8080/api/stores/" + sendID);
+            xhr.setRequestHeader("Content-Type", "application/json; charset=UTF-8");
+            xhr.setRequestHeader("Authorization", "Bearer " + token);
+            xhr.send();
+            xhr.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    getStores();
+                    getPosts();
+                    getStoreGroupDetail();
+                }
+            }
+        }
+
+        function viewPostDetail(sendID) {
+            localStorage.setItem("postID", sendID);
+            window.location.href = "PostDetail.html";
+        }
+
+        function viewStoreDetail(sendID) {
+            localStorage.setItem("storeID", sendID);
+            window.location.href = "StoreDetail.html";
+        }
+
+        function editStore(sendID) {
+            localStorage.setItem("storeID", sendID);
+            window.location.href = "base/EditStores.html";
+        }
+
+        function editPost(sendID) {
+            localStorage.setItem("postID", sendID);
+            window.location.href = "base/EditPost.html";
+        }
+
+        function getStoreGroupDetail () {
+            var token = localStorage.getItem("access_token");
+            var storeID = localStorage.getItem('storeGroupID');
+            var xhr = new XMLHttpRequest();
+            var ddl = document.getElementById('dropdownlist');
+            xhr.open("GET","http://localhost:8080/api/store-groups/"+storeID);
+            xhr.setRequestHeader("Content-Type", "application/json; charset=UTF-8");
+            xhr.setRequestHeader("Authorization","Bearer "+token);
+
+            xhr.send();
+            xhr.onreadystatechange = function () {
+                if(this.readyState == 4 && this.status == 200) {
+                    var data = JSON.parse(xhr.responseText).data;
+                    document.getElementById('IDtxt').value = data.storeGroupID;
+                    document.getElementById('Nametxt').value = data.storeGroupName;
+                    document.getElementById('Phonetxt').value = data.storeGroupPhone;
+                    document.getElementById('Mailtxt').value = data.storeGroupMail;
+                    document.getElementById('WebTxt').value = data.storeGroupWeb;
+                    document.getElementById('Descriptiontxt').value = data.storeGroupDescription;
+                    ddl.innerHTML += "<option value=\"" + data.storeType.storeTypeID + "\">" + data.storeType.storeTypeName; + "</option>";
+                }
+            }
+
+        }
+        function createStores() {
+            var storeID = localStorage.getItem('storeGroupID');
+            localStorage.setItem("storeGroupID",storeID);
+            window.location.href = "base/CreateStore.html";
+        }
+
+        function createPosts() {
+            var storeID = localStorage.getItem('storeGroupID');
+            localStorage.setItem("storeGroupID",storeID);
+            window.location.href = "base/CreatePost.html";
+        }
+    </script>
+</head>
+<body class="app header-fixed sidebar-fixed aside-menu-fixed sidebar-lg-show">
+<header class="app-header navbar">
+    <div style="width: 36%; margin-right: -125%">
+        <div class="col-6 col-sm-4 col-md-2 col-xl mb-3 mb-xl-0">
+            <button class="btn btn-block btn-danger active" type="button" aria-pressed="true" onclick="logout()">Log out</button>
+        </div>
+    </div>
+</header>
+<div class="app-body">
+    <div class="sidebar">
+        <nav class="sidebar-nav">
+            <ul class="nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="ListStoreGroup.html">
+                        <i class="nav-icon icon-speedometer"></i> Dashboard
+                    </a>
+                </li>
+                <li class="nav-title"></li>
+                <li class="nav-item">
+                    <a class="nav-link" href="ListStoreGroup.html">
+                        <i class="nav-icon icon-drop"></i> Store Group</a>
+                </li>
+
+                <li class="nav-title"></li>
+                <li class="nav-item">
+                    <a class="nav-link" href="ListStore.html">
+                        <i class="nav-icon icon-drop"></i> Stores</a>
+                </li>
+                <li class="nav-title"></li>
+                <li class="nav-item">
+                    <a class="nav-link" href="ListPost.html">
+                        <i class="nav-icon icon-drop"></i> Post</a>
+                </li>
+                <li class="nav-title"></li>
+                <li class="nav-item">
+                    <a class="nav-link" href="ListVoucher.html">
+                        <i class="nav-icon icon-drop"></i> Voucher</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+    <main class="main">
+        <!-- Breadcrumb-->
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="Dashboard.html">Home</a>
+            </li>
+
+            <li class="breadcrumb-item active">Store Group</li>
+            <!-- Breadcrumb Menu-->
+
+            <!-- Breadcrumb Menu-->
+
+        </ol>
+        <div class="container-fluid">
+            <div class="animated fadeIn">
+                <div class="row" style="width: 130%;padding-left: 23%;">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <strong>Store Group Detail</strong></div>
+                            <div class="card-body">
+                                <form class="form-horizontal" action="" method="post" enctype="multipart/form-data">
+                                    <div class="form-group row">
+                                        <label class="col-md-3 col-form-label"></label>
+                                        <div class="col-md-9">
+                                            <label id="resultlbl"></label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-md-3 col-form-label">ID</label>
+                                        <div class="col-md-9">
+                                            <!--<p class="form-control-static" id="storegroupIDtxt"></p>-->
+                                            <input class="form-control" id="IDtxt" type="text" name="disabled-input" placeholder="" disabled="">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-md-3 col-form-label" for="Nametxt">Name</label>
+                                        <div class="col-md-9">
+                                            <input class="form-control" id="Nametxt" type="text" name="disabled-input" disabled="">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-md-3 col-form-label" for="Mailtxt">Email</label>
+                                        <div class="col-md-9">
+                                            <input class="form-control" id="Mailtxt" type="text" name="disabled-input" disabled="">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-md-3 col-form-label" for="Phonetxt">Phone</label>
+                                        <div class="col-md-9">
+                                            <input class="form-control" id="Phonetxt" type="text" name="disabled-input" disabled="">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-md-3 col-form-label" for="WebTxt">Website</label>
+                                        <div class="col-md-9">
+                                            <input class="form-control" id="WebTxt" type="text" name="disabled-input" disabled="">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-md-3 col-form-label" for="Descriptiontxt">Description</label>
+                                        <div class="col-md-9">
+                                            <textarea class="form-control" id="Descriptiontxt" name="textarea-input" rows="9" placeholder="Content.." disabled=""></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-md-3 col-form-label" for="dropdownlist">Select</label>
+                                        <div class="col-md-9">
+                                            <select class="form-control" id="dropdownlist" name="select1" disabled="">
+
+                                            </select>
+                                        </div>
+                                    </div>
+
+
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- /.col-->
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+
+                            <div class="card-body">
+                                <div style="width: 40%; height: 40%; float: left; margin-left: 94%; margin-bottom: 10px">
+                                    <div class="col-6 col-sm-4 col-md-2 col-xl mb-3 mb-xl-0">
+                                        <button class="btn btn-block btn-info" type="button" aria-pressed="true" onclick="createStores()">Create</button>
+                                    </div>
+                                </div>
+                                <!-- /.row-->
+                                <br>
+                                <table class="table table-responsive-sm table-hover table-outline mb-0">
+                                    <thead class="thead-light">
+                                    <tr>
+                                        <th class="text-center">
+                                            <i class="icon-people"></i>
+                                        </th>
+                                        <th>Store name</th>
+                                        <th>Store address</th>
+                                        <th class="text-center">Detail</th>
+                                        <th class="text-center">Edit</th>
+                                        <th class="text-center">Delete</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="my-data-store">
+                                    <tr>
+                                        <td class="text-center">
+                                        </td>
+                                        <td>
+
+                                        </td>
+                                        <td class="text-center">
+
+                                        </td>
+                                        <td>
+
+                                        </td>
+                                        <td class="text-center">
+
+                                        </td>
+                                        <td>
+
+                                        </td>
+                                    </tr>
+
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        </div>
+                        <div class="card">
+
+                            <div class="card-body">
+                                <div style="width: 40%; height: 40%; float: left; margin-left: 94%; margin-bottom: 10px">
+                                    <div class="col-6 col-sm-4 col-md-2 col-xl mb-3 mb-xl-0">
+                                        <button class="btn btn-block btn-info" type="button" aria-pressed="true" onclick="createPosts()">Create</button>
+                                    </div>
+                                </div>
+                                <!-- /.row-->
+                                <br>
+                                <table class="table table-responsive-sm table-hover table-outline mb-0">
+                                    <thead class="thead-light">
+                                    <tr>
+                                        <th class="text-center">
+                                            <i class="icon-people"></i>
+                                        </th>
+                                        <th>Name</th>
+                                        <th>Title</th>
+                                        <th>Start date</th>
+                                        <th>End date</th>
+                                        <th>Voucher Remain</th>
+                                        <th>Voucher Total</th>
+                                        <th>Post banner</th>
+                                        <th>Description</th>
+                                        <th class="text-center">Detail</th>
+                                        <th class="text-center">Edit</th>
+                                        <th class="text-center">Delete</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="my-data-post">
+                                    <tr>
+                                        <td class="text-center">
+                                        </td>
+                                        <td>
+
+                                        </td>
+                                        <td class="text-center">
+
+                                        </td>
+                                        <td>
+
+                                        </td>
+                                        <td class="text-center">
+
+                                        </td>
+                                        <td>
+
+                                        </td>
+                                    </tr>
+
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.col-->
+                </div>
+                <!-- /.row-->
+            </div>
+        </div>
+    </main>
+
+</div>
+<footer class="app-footer">
+    <div>
+
+    </div>
+    <div class="ml-auto">
+        <span>Powered by</span>
+        <a>AntiPhone</a>
+    </div>
+</footer>
+<!-- CoreUI and necessary plugins-->
+<script src="node_modules/jquery/dist/jquery.min.js"></script>
+<script src="node_modules/popper.js/dist/umd/popper.min.js"></script>
+<script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="node_modules/pace-progress/pace.min.js"></script>
+<script src="node_modules/perfect-scrollbar/dist/perfect-scrollbar.min.js"></script>
+<script src="node_modules/@coreui/coreui/dist/js/coreui.min.js"></script>
+<!-- Plugins and scripts required by this view-->
+<script src="node_modules/chart.js/dist/Chart.min.js"></script>
+<script src="node_modules/@coreui/coreui-plugin-chartjs-custom-tooltips/dist/js/custom-tooltips.min.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

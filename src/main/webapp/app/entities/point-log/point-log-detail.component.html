@@ -1,0 +1,45 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="pointLog">
+            <h2><span>Point Log</span> {{pointLog.id}}</h2>
+            <hr>
+            <-alert-error></-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span>Point Log ID</span></dt>
+                <dd>
+                    <span>{{pointLog.pointLogID}}</span>
+                </dd>
+                <dt><span>Point Log Point Spent</span></dt>
+                <dd>
+                    <span>{{pointLog.pointLogPointSpent}}</span>
+                </dd>
+                <dt><span>Point Log Date Used</span></dt>
+                <dd>
+                    <span>{{pointLog.pointLogDateUsed}}</span>
+                </dd>
+                <dt><span>Voucher</span></dt>
+                <dd>
+                    <div *ngIf="pointLog.voucherId">
+                        <a [routerLink]="['/voucher', pointLog.voucherId, 'view']">{{pointLog.voucherId}}</a>
+                    </div>
+                </dd>
+                <dt><span>User</span></dt>
+                <dd>
+                    {{pointLog.userId}}
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/point-log', pointLog.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span> Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,54 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+            <h2 id="-storeGroup-heading">Create or edit a Store</h2>
+            <div>
+                <-alert-error></-alert-error>
+                <div class="form-group" [hidden]="!storeGroup.id">
+                    <label for="id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id"
+                        [(ngModel)]="storeGroup.id" readonly />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_storeID">Store ID</label>
+                    <input type="text" class="form-control" name="storeID" id="field_storeID"
+                        [(ngModel)]="storeGroup.storeID" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_storeName">Store Name</label>
+                    <input type="text" class="form-control" name="storeName" id="field_storeName"
+                        [(ngModel)]="storeGroup.storeName" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_storePhone">Store Phone</label>
+                    <input type="number" class="form-control" name="storePhone" id="field_storePhone"
+                        [(ngModel)]="storeGroup.storePhone" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_storeMail">Store Mail</label>
+                    <input type="text" class="form-control" name="storeMail" id="field_storeMail"
+                        [(ngModel)]="storeGroup.storeMail" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_storeWeb">Store Web</label>
+                    <input type="text" class="form-control" name="storeWeb" id="field_storeWeb"
+                        [(ngModel)]="storeGroup.storeWeb" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_storeDescription">Store Description</label>
+                    <input type="text" class="form-control" name="storeDescription" id="field_storeDescription"
+                        [(ngModel)]="storeGroup.storeDescription" />
+                </div>
+
+            </div>
+            <div>
+                <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
+                    <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span>Cancel</span>
+                </button>
+                <button type="submit" id="save-entity" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span>Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
